@@ -1,0 +1,122 @@
+version: "3.3"
+
+services:
+  netdata:
+    container_name: netdata
+    image: netdata/netdata
+    hostname: stats.iamyell.team
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      gonzu_bridge_network:
+        ipv4_address: 192.168.0.7
+  #Listen in 9000 port
+  portainer:
+    container_name: portainer
+    image: portainer/portainer
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      gonzu_bridge_network:
+        ipv4_address: 192.168.0.6
+  #Database listen in port 27017
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    restart: always
+    volumes:
+      - /app/mongodb/data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=
+    ports:
+      - "27017:27017"
+    networks:
+      gonzu_bridge_network:
+        ipv4_address: 192.168.0.4
+  #Listen in port 3000
+  web_gonzu:
+    container_name: web_gonzu
+    build: ./frontend-gonzu
+    restart: always
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - /app/web:/app
+      - /app/web/logs:/root/.npm/_logs
+    networks:
+      gonzu_bridge_network:
+        ipv4_address: 192.168.0.5
+  #Listen in port 4000
+  apiv1_gonzu:
+    container_name: apiv1_gonzu
+    build: ./api-gonzu
+    restart: always
+    depends_on:
+      - mongodb
+    environment:
+      - NODE_ENV=development
+      - HOST=0.0.0.0
+      - PORT=4000
+      - DATABASE_HOST=mongodb
+      - DATABASE_CLIENT=mongo
+      - DATABASE_NAME=strapi
+      - DATABASE_PORT=27017
+      - DATABASE_USERNAME=root
+      - DATABASE_PASSWORD=
+    volumes:
+      - /app/api/v1/public:/srv/app/public
+      - /app/api/v1/temp:/srv/app/.tmp
+      - /app/api/v1/cache:/srv/app/.cache
+    networks:
+      gonzu_bridge_network:
+        ipv4_address: 192.168.0.3
+  # Setup the nginx service on gonzu bridge network
+  nginx_service:
+    container_name: nginx_service
+    build: ./nginx
+    env_file: .env
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      # - "443:443"
+    environment:
+      - NGINX_HOST=${NGINX_HOST}
+    volumes:
+      - /app/webroot:/var/www/html
+      - /app/certbot/etc:/etc/letsencrypt
+      - /app/certbot/var:/var/lib/letsencrypt
+      - /app/certs:/etc/nginx/ssl/
+    depends_on:
+      - apiv1_gonzu
+      - web_gonzu
+      - portainer
+      - netdata
+    networks:
+      gonzu_bridge_network:
+        ipv4_address: 192.168.0.2
+  #Running certbot to renew ssl certificates
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - /app/certbot/etc:/etc/letsencrypt
+      - /app/certbot/var:/var/lib/letsencrypt
+      - /app/webroot:/var/www/html
+    depends_on:
+      - nginx_service
+    command: certonly --server https://acme-v02.api.letsencrypt.org/directory --webroot --webroot-path=/var/www/html --cert-name iamyell.team --email yoshualopez1529@gmail.com --agree-tos --no-eff-email --force-renewal -d iamyell.team -d *.iamyell.team
+networks:
+  gonzu_bridge_network:
+    driver: bridge
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: "192.168.0.0/24"
+
