@@ -1,122 +1,146 @@
-version: "3.3"
+version: '3.3'
 
 services:
+  traefik:
+    container_name: traefik
+    image: traefik:latest
+    restart: always
+    ports:
+      - '80:80' # <== http
+      - '8080:8080' # <== :8080 is where the dashboard runs on
+      - '443:443' # <== https
+    command:
+      #### These are the CLI commands that will configure Traefik and tell it how to work! ####
+      ## API Settings - https://docs.traefik.io/operations/api/, endpoints - https://docs.traefik.io/operations/api/#endpoints ##
+      - --api.insecure=false # <== Enabling insecure api, NOT RECOMMENDED FOR PRODUCTION
+      - --api.dashboard=true # <== Enabling the dashboard to view services, middlewares, routers, etc...
+      - --api.debug=true # <== Enabling additional endpoints for debugging and profiling
+      ## Log Settings (options: ERROR, DEBUG, PANIC, FATAL, WARN, INFO) - https://docs.traefik.io/observability/logs/ ##
+      - --log.level=DEBUG # <== Setting the level of the logs from traefik
+      ## Provider Settings - https://docs.traefik.io/providers/docker/#provider-configuration ##
+      - --providers.docker=true # <== Enabling docker as the provider for traefik
+      - --providers.docker.exposedbydefault=false # <== Don't expose every container to traefik, only expose enabled ones
+      - --providers.file.filename=/dynamic.yaml # <== Referring to a dynamic configuration file
+      - --providers.docker.network=web_gonzu_bridge # <== Operate on the docker network named web
+      ## Entrypoints Settings - https://docs.traefik.io/routing/entrypoints/#configuration ##
+      - --entrypoints.web.address=:80 # <== Defining an entrypoint for port :80 named web
+      - --entrypoints.web-secured.address=:443 # <== Defining an entrypoint for https on port :443 named web-secured
+      ## Certificate Settings (Let's Encrypt) -  https://docs.traefik.io/https/acme/#configuration-examples ##
+      - --certificatesresolvers.mytlschallenge.acme.tlschallenge=true # <== Enable TLS-ALPN-01 to generate and renew ACME certs
+      - --certificatesresolvers.mytlschallenge.acme.email=$${TLS_EMAIL} # <== Setting email for certs
+      - --certificatesresolvers.mytlschallenge.acme.storage=/letsencrypt/acme.json # <== Defining acme file to store cert information
+    volumes:
+      - ./dynamic.yaml:/dynamic.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /app/s3/letsencrypt:/letsencrypt
+    networks:
+      - web_gonzu_bridge
+    labels:
+      #### Labels define the behavior and rules of the traefik proxy for this container ####
+      - 'traefik.enable=true' # <== Enable traefik on itself to view dashboard and assign subdomain to view it
+      - 'traefik.http.routers.api.rule=Host(`monitor.${TLS_DOMAIN}`)' # <== Setting the domain for the dashboard
+      - 'traefik.http.routers.api.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
+      - 'traefik.http.routers.api.service=api@internal' # <== Enabling the api to be a service to access
+
+      - 'traefik.http.routers.api.middlewares=redirect@file' # <== This is a middleware to redirect to https
+      - 'traefik.http.routers.api-secured.rule=Host(`monitor.${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
+      - 'traefik.http.routers.api-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
+      - 'traefik.http.routers.api-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
+      - 'traefik.http.routers.api-secured.service=api@internal' # <== Enabling the api to be a service to access
+
   netdata:
     container_name: netdata
     image: netdata/netdata
-    hostname: stats.iamyell.team
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
-      gonzu_bridge_network:
-        ipv4_address: 192.168.0.7
+      - web_gonzu_bridge
+    labels:
+      #### Labels define the behavior and rules of the traefik proxy for this container ####
+      - 'traefik.enable=true' # <== Enable traefik to proxy this container
+      - 'traefik.http.routers.netdata.rule=Host(`stats.${TLS_DOMAIN}`)' # <== Your Domain Name goes here for the http rule
+      - 'traefik.http.routers.netdata.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
+      - 'traefik.http.routers.netdata.middlewares=redirect@file' # <== This is a middleware to redirect to https
+      - 'traefik.http.routers.netdata-secured.rule=Host(`stats.${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
+      - 'traefik.http.routers.netdata-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
+      - 'traefik.http.routers.netdata-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
   #Listen in 9000 port
   portainer:
     container_name: portainer
     image: portainer/portainer
     restart: always
-    ports:
-      - "9000:9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
-      gonzu_bridge_network:
-        ipv4_address: 192.168.0.6
+      - web_gonzu_bridge
+    labels:
+      #### Labels define the behavior and rules of the traefik proxy for this container ####
+      - 'traefik.enable=true' # <== Enable traefik to proxy this container
+      - 'traefik.http.routers.portainer.rule=Host(`portainer.${TLS_DOMAIN}`)' # <== Your Domain Name goes here for the http rule
+      - 'traefik.http.routers.portainer.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
+      - 'traefik.http.routers.portainer.middlewares=redirect@file' # <== This is a middleware to redirect to https
+      - 'traefik.http.routers.portainer-secured.rule=Host(`portainer.${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
+      - 'traefik.http.routers.portainer-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
+      - 'traefik.http.routers.portainer-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
   #Database listen in port 27017
   mongodb:
     container_name: mongodb
     image: mongo
     restart: always
-    volumes:
-      - /app/mongodb/data:/data/db
+    #volumes:
+    #  - /app/s3/mongodb/data:/data/db
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=
-    ports:
-      - "27017:27017"
+      - MONGO_INITDB_ROOT_USERNAME=${DATABASE_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${DATABASE_PASSWORD}
     networks:
-      gonzu_bridge_network:
-        ipv4_address: 192.168.0.4
+      - backend_gonzu_bridge
   #Listen in port 3000
-  web_gonzu:
-    container_name: web_gonzu
-    build: ./frontend-gonzu
-    restart: always
-    environment:
-      - NODE_ENV=production
-    volumes:
-      - /app/web:/app
-      - /app/web/logs:/root/.npm/_logs
-    networks:
-      gonzu_bridge_network:
-        ipv4_address: 192.168.0.5
+  # web_gonzu:
+  #   container_name: web_gonzu
+  #   build: ./frontend-gonzu
+  #   restart: always
+  #   environment:
+  #     - NODE_ENV=production
+  #   volumes:
+  #     - /app/s3/web:/app
+  #     - /app/s3/web/logs:/root/.npm/_logs
+  #   networks:
+  #     - web_gonzu_bridge
   #Listen in port 4000
-  apiv1_gonzu:
-    container_name: apiv1_gonzu
-    build: ./api-gonzu
+  gonzu-api:
+    container_name: gonzu-api
+    image: yellyoshua/gonzu-api
     restart: always
     depends_on:
       - mongodb
-    environment:
-      - NODE_ENV=development
-      - HOST=0.0.0.0
-      - PORT=4000
-      - DATABASE_HOST=mongodb
-      - DATABASE_CLIENT=mongo
-      - DATABASE_NAME=strapi
-      - DATABASE_PORT=27017
-      - DATABASE_USERNAME=root
-      - DATABASE_PASSWORD=
-    volumes:
-      - /app/api/v1/public:/srv/app/public
-      - /app/api/v1/temp:/srv/app/.tmp
-      - /app/api/v1/cache:/srv/app/.cache
+    env_file:
+      - .env
     networks:
-      gonzu_bridge_network:
-        ipv4_address: 192.168.0.3
-  # Setup the nginx service on gonzu bridge network
-  nginx_service:
-    container_name: nginx_service
-    build: ./nginx
-    env_file: .env
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      # - "443:443"
-    environment:
-      - NGINX_HOST=${NGINX_HOST}
-    volumes:
-      - /app/webroot:/var/www/html
-      - /app/certbot/etc:/etc/letsencrypt
-      - /app/certbot/var:/var/lib/letsencrypt
-      - /app/certs:/etc/nginx/ssl/
-    depends_on:
-      - apiv1_gonzu
-      - web_gonzu
-      - portainer
-      - netdata
-    networks:
-      gonzu_bridge_network:
-        ipv4_address: 192.168.0.2
-  #Running certbot to renew ssl certificates
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - /app/certbot/etc:/etc/letsencrypt
-      - /app/certbot/var:/var/lib/letsencrypt
-      - /app/webroot:/var/www/html
-    depends_on:
-      - nginx_service
-    command: certonly --server https://acme-v02.api.letsencrypt.org/directory --webroot --webroot-path=/var/www/html --cert-name iamyell.team --email yoshualopez1529@gmail.com --agree-tos --no-eff-email --force-renewal -d iamyell.team -d *.iamyell.team
+      - web_gonzu_bridge
+      - backend_gonzu_bridge
+    labels:
+      #### Labels define the behavior and rules of the traefik proxy for this container ####
+      - 'traefik.enable=true' # <== Enable traefik to proxy this container
+      - 'traefik.http.routers.gonzu-api.rule=Host(`api.${TLS_DOMAIN}`)' # <== Your Domain Name goes here for the http rule
+      - 'traefik.http.routers.gonzu-api.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
+      - 'traefik.http.routers.gonzu-api.middlewares=redirect@file' # <== This is a middleware to redirect to https
+      - 'traefik.http.routers.gonzu-api-secured.rule=Host(`api.${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
+      - 'traefik.http.routers.gonzu-api-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
+      - 'traefik.http.routers.gonzu-api-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
 networks:
-  gonzu_bridge_network:
+  web_gonzu_bridge:
     driver: bridge
     driver_opts:
       parent: eth0
     ipam:
       config:
-        - subnet: "192.168.0.0/24"
-
+        - subnet: '192.168.0.0/24'
+  backend_gonzu_bridge:
+    driver: bridge
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: '192.178.0.0/24'

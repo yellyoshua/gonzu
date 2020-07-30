@@ -1,100 +1,77 @@
+# UE Gonzu steps to setup services
 
-## Create the network in bridge mode
+## Services
 
-- `docker network create --subnet 192.168.0.0/24 gonzu_bridge_network`
+- ## Traefik
+    
+    Traefik is a leading modern reverse proxy and load balancer that makes deploying microservices easy. Traefik integrates with your existing infrastructure components and configures itself automatically and dynamically
 
-## [Prod] Create the dhparam key for nginx ssl connections
+    |  Environment | Are example   |
+    |:------------:|:----------------:|
+    |   TLS_EMAIL  | lorem@ipsum.com  |
+    |  TLS_DOMAIN  |    ipsum.com     |
+    |   |   |
+    |   |   |
+    |   |   |
 
-`openssl dhparam -out /app/certs/dhparam.pem 2048`
+- ## Netdata
 
-<!-- After that created the cert change the certname in nginx configs conf.d/ -->
+- ## Portainer
+
+- ## Mongodb
+
+- ## Gonzu Web
+
+- ## Gonzu Api
 
 ## Create the volumes
 
-The volumes was create in the pah ``/var/lib/docker/volumes/<volume-name>``
+# Steps to deploy
 
+## [1] Attach folders to s3 bucket
 
-  - mongodb-gonzu:
-    driver: local
-    driver_opts:
-      type: none
-      device: /app/mongodb/data
-      o: bind
+1. Install s3fs
 
+	`sudo apt install s3fs`
 
+2. Save credential to .passwd-s3fs file
 
-  - web-gonzu:
-    driver: local
-    driver_opts:
-      type: none
-      device: /app/web
-      o: bind
+	`echo S3_ACCESS_KEY:S3_SECRET_ACCESS_KEY > .passwd-s3fs`
 
+3. Set permissions to the file
 
+	`sudo chmod 600 .passwd-s3fs`
 
-  - apiv1-public:
-    driver: local
-    driver_opts:
-      type: none
-      device: /app/api/v1/public
+4. Create folders /app/s3
 
+    `mkdir /app/s3`
 
+5. Connect S3 Bucket to folder /app/s3
 
-  - apiv1-temp:
-    driver: local
-    driver_opts:
-      type: none
-      device: /app/api/v1/temp
-  
-  
-  
-  - apiv1-cache:
-    driver: local
-    driver_opts:
-      type: none
-      device: /app/api/v1/cache
-  
-  
-  
-  - certbot-etc:
-    driver: local
-    driver_opts:
-      type: none
-      device: /app/certbot/etc
-      o: bind
-  
-  
-  
-  - certbot-var:
-    driver: local
-    driver_opts:
-      type: none
-      device: /app/certbot/var
-      o: bind
-  
-  
-  
-  - webroot:
-    driver: local
-    driver_opts:
-      type: none
-      device: /app/webroot
-      o: bind
+	`sudo s3fs bucket-name /app/s3 -o passwd_file=.passwd-s3fs`
 
-# Deploy to Production
+## [2] Setup environments
 
-1. Set environment database credential set in docker-compose.yaml
+1. Copy .env.example to .env
 
-2. Set environment NODE_ENV to "production"
+    `cp .env.example .env`
 
-3. Create the dhparam key for nginx ssl connections
+2. Set up environment values in the file .env
 
-    `openssl dhparam -out /app/certs/dhparam.pem 2048`
+    `nano .env`
 
-4. Deploy container with docker compose command
+## [3] Deploy to Production
+
+1. Deploy services
     
     `docker-compose up -d`
 
-Note: To deploy with docker swarm mode run:
+Notes: 
+  
+  To inspect docker-compose services 
 
-  `docker stack deploy --compose-file docker-compose.yaml gonzu`
+  `docker-compose ps`
+
+  To run determinate docker-compose service 
+
+  `docker-compose up -d service_name`
