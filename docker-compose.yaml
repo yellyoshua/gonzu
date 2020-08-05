@@ -85,36 +85,48 @@ services:
       - 'traefik.http.routers.portainer-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
       - 'traefik.http.routers.portainer-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
   #Database listen in port 27017
-  mongodb:
-    container_name: mongodb
-    image: mongo
+  mysql:
+    container_name: mysql
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
     restart: always
-    #volumes:
-    #  - /app/s3/mongodb/data:/data/db
+    volumes:
+      - /app/mysql/data:/var/lib/mysql
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=${DATABASE_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${DATABASE_PASSWORD}
+      # - MONGO_INITDB_ROOT_USERNAME=${DATABASE_USERNAME}
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
     networks:
       - backend_gonzu_bridge
+    labels:
+      - 'traefik.enable=false'
   #Listen in port 3000
-  # web_gonzu:
-  #   container_name: web_gonzu
-  #   build: ./frontend-gonzu
-  #   restart: always
-  #   environment:
-  #     - NODE_ENV=production
-  #   volumes:
-  #     - /app/s3/web:/app
-  #     - /app/s3/web/logs:/root/.npm/_logs
-  #   networks:
-  #     - web_gonzu_bridge
+  gonzu-web:
+    container_name: gonzu-web
+    image: yellyoshua/gonzu-web
+    restart: always
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - /app/s3/web:/app
+      - /app/s3/web/logs:/root/.npm/_logs
+    networks:
+      - web_gonzu_bridge
+    labels:
+      #### Labels define the behavior and rules of the traefik proxy for this container ####
+      - 'traefik.enable=true' # <== Enable traefik to proxy this container
+      - 'traefik.http.routers.gonzu-web.rule=Host(`${TLS_DOMAIN}`)' # <== Your Domain Name goes here for the http rule
+      - 'traefik.http.routers.gonzu-web.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
+      - 'traefik.http.routers.gonzu-web.middlewares=redirect@file' # <== This is a middleware to redirect to https
+      - 'traefik.http.routers.gonzu-web-secured.rule=Host(`${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
+      - 'traefik.http.routers.gonzu-web-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
+      - 'traefik.http.routers.gonzu-web-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
   #Listen in port 4000
   gonzu-api:
     container_name: gonzu-api
     image: yellyoshua/gonzu-api
     restart: always
     depends_on:
-      - mongodb
+      - mysql
     env_file:
       - .env
     networks:
@@ -130,6 +142,9 @@ services:
       - 'traefik.http.routers.gonzu-api-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
       - 'traefik.http.routers.gonzu-api-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
 networks:
+  gonzu_overlay:
+    driver: overlay
+    attachable: true
   web_gonzu_bridge:
     driver: bridge
     driver_opts:
