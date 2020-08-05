@@ -1,6 +1,7 @@
 version: '3.3'
 
 services:
+  
   traefik:
     container_name: traefik
     image: traefik:latest
@@ -66,7 +67,7 @@ services:
       - 'traefik.http.routers.netdata-secured.rule=Host(`stats.${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
       - 'traefik.http.routers.netdata-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
       - 'traefik.http.routers.netdata-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
-  #Listen in 9000 port
+  
   portainer:
     container_name: portainer
     image: portainer/portainer
@@ -84,12 +85,14 @@ services:
       - 'traefik.http.routers.portainer-secured.rule=Host(`portainer.${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
       - 'traefik.http.routers.portainer-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
       - 'traefik.http.routers.portainer-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
-  #Database listen in port 27017
+  
   mysql:
     container_name: mysql
     image: mysql:5.7
     command: --default-authentication-plugin=mysql_native_password
     restart: always
+    ports:
+      - '3306:3306'
     volumes:
       - /app/mysql/data:/var/lib/mysql
     environment:
@@ -97,12 +100,10 @@ services:
       - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
     networks:
       - backend_gonzu_bridge
-    labels:
-      - 'traefik.enable=false'
-  #Listen in port 3000
+  
   gonzu-web:
     container_name: gonzu-web
-    image: yellyoshua/gonzu-web
+    image: yellyoshua/gonzu-web:latest
     restart: always
     environment:
       - NODE_ENV=production
@@ -120,10 +121,10 @@ services:
       - 'traefik.http.routers.gonzu-web-secured.rule=Host(`${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
       - 'traefik.http.routers.gonzu-web-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
       - 'traefik.http.routers.gonzu-web-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
-  #Listen in port 4000
+  
   gonzu-api:
     container_name: gonzu-api
-    image: yellyoshua/gonzu-api
+    image: yellyoshua/gonzu-api:latest
     restart: always
     depends_on:
       - mysql
@@ -141,6 +142,7 @@ services:
       - 'traefik.http.routers.gonzu-api-secured.rule=Host(`api.${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
       - 'traefik.http.routers.gonzu-api-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
       - 'traefik.http.routers.gonzu-api-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
+
 networks:
   gonzu_overlay:
     driver: overlay
