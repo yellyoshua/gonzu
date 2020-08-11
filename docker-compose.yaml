@@ -1,7 +1,6 @@
 version: '3.3'
 
 services:
-  
   traefik:
     container_name: traefik
     image: traefik:latest
@@ -28,7 +27,7 @@ services:
       - --entrypoints.web-secured.address=:443 # <== Defining an entrypoint for https on port :443 named web-secured
       ## Certificate Settings (Let's Encrypt) -  https://docs.traefik.io/https/acme/#configuration-examples ##
       - --certificatesresolvers.mytlschallenge.acme.tlschallenge=true # <== Enable TLS-ALPN-01 to generate and renew ACME certs
-      - --certificatesresolvers.mytlschallenge.acme.email=$${TLS_EMAIL} # <== Setting email for certs
+      - --certificatesresolvers.mytlschallenge.acme.email=${TLS_EMAIL} # <== Setting email for certs
       - --certificatesresolvers.mytlschallenge.acme.storage=/letsencrypt/acme.json # <== Defining acme file to store cert information
     volumes:
       - ./dynamic.yaml:/dynamic.yaml
@@ -67,7 +66,7 @@ services:
       - 'traefik.http.routers.netdata-secured.rule=Host(`stats.${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
       - 'traefik.http.routers.netdata-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
       - 'traefik.http.routers.netdata-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
-  
+
   portainer:
     container_name: portainer
     image: portainer/portainer
@@ -85,7 +84,7 @@ services:
       - 'traefik.http.routers.portainer-secured.rule=Host(`portainer.${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
       - 'traefik.http.routers.portainer-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
       - 'traefik.http.routers.portainer-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
-  
+
   mysql:
     container_name: mysql
     image: mysql:5.7
@@ -100,7 +99,7 @@ services:
       - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
     networks:
       - backend_gonzu_bridge
-  
+
   gonzu-web:
     container_name: gonzu-web
     image: yellyoshua/gonzu-web:latest
@@ -115,13 +114,43 @@ services:
     labels:
       #### Labels define the behavior and rules of the traefik proxy for this container ####
       - 'traefik.enable=true' # <== Enable traefik to proxy this container
-      - 'traefik.http.routers.gonzu-web.rule=Host(`${TLS_DOMAIN}`)' # <== Your Domain Name goes here for the http rule
+      - 'traefik.http.routers.gonzu-web.rule=Host(`${TLS_DOMAIN}`,`www.${TLS_DOMAIN}`)' # <== Your Domain Name goes here for the http rule
       - 'traefik.http.routers.gonzu-web.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
       - 'traefik.http.routers.gonzu-web.middlewares=redirect@file' # <== This is a middleware to redirect to https
-      - 'traefik.http.routers.gonzu-web-secured.rule=Host(`${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
+      - 'traefik.http.routers.gonzu-web-secured.rule=Host(`${TLS_DOMAIN}`,`www.${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
       - 'traefik.http.routers.gonzu-web-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
       - 'traefik.http.routers.gonzu-web-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
-  
+
+  blog:
+    container_name: blog
+    image: ghost:alpine
+    restart: always
+    ports:
+      - 2368:2368
+    volumes:
+      - /app/s3/blog:/var/lib/ghost/content
+    environment:
+      # see https://docs.ghost.org/docs/config#section-running-ghost-with-config-env-variables
+      database__client: mysql
+      database__connection__host: ${DATABASE_HOST}
+      database__connection__user: ${DATABASE_USERNAME}
+      database__connection__password: ${DATABASE_PASSWORD}
+      database__connection__database: ghost
+      # this url value is just an example, and is likely wrong for your environment!
+      #url: http://blog.${TLS_DOMAIN}
+    networks:
+      - web_gonzu_bridge
+      - backend_gonzu_bridge
+    labels:
+      #### Labels define the behavior and rules of the traefik proxy for this container ####
+      - 'traefik.enable=true' # <== Enable traefik to proxy this container
+      - 'traefik.http.routers.blog.rule=Host(`blog.${TLS_DOMAIN}`)' # <== Your Domain Name goes here for the http rule
+      - 'traefik.http.routers.blog.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
+      - 'traefik.http.routers.blog.middlewares=redirect@file' # <== This is a middleware to redirect to https
+      - 'traefik.http.routers.blog-secured.rule=Host(`blog.${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
+      - 'traefik.http.routers.blog-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
+      - 'traefik.http.routers.blog-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
+
   gonzu-api:
     container_name: gonzu-api
     image: yellyoshua/gonzu-api:latest
