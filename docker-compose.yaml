@@ -21,7 +21,7 @@ services:
       - --providers.docker=true # <== Enabling docker as the provider for traefik
       - --providers.docker.exposedbydefault=false # <== Don't expose every container to traefik, only expose enabled ones
       - --providers.file.filename=/dynamic.yaml # <== Referring to a dynamic configuration file
-      - --providers.docker.network=web_gonzu_bridge # <== Operate on the docker network named web
+      - --providers.docker.network=gonzu_web # <== Operate on the docker network named web
       ## Entrypoints Settings - https://docs.traefik.io/routing/entrypoints/#configuration ##
       - --entrypoints.web.address=:80 # <== Defining an entrypoint for port :80 named web
       - --entrypoints.web-secured.address=:443 # <== Defining an entrypoint for https on port :443 named web-secured
@@ -34,7 +34,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /app/s3/letsencrypt:/letsencrypt
     networks:
-      - web_gonzu_bridge
+      - web
     labels:
       #### Labels define the behavior and rules of the traefik proxy for this container ####
       - 'traefik.enable=true' # <== Enable traefik on itself to view dashboard and assign subdomain to view it
@@ -56,7 +56,7 @@ services:
       - /sys:/host/sys:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
-      - web_gonzu_bridge
+      - web
     labels:
       #### Labels define the behavior and rules of the traefik proxy for this container ####
       - 'traefik.enable=true' # <== Enable traefik to proxy this container
@@ -74,7 +74,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
-      - web_gonzu_bridge
+      - web
     labels:
       #### Labels define the behavior and rules of the traefik proxy for this container ####
       - 'traefik.enable=true' # <== Enable traefik to proxy this container
@@ -98,7 +98,7 @@ services:
       # - MONGO_INITDB_ROOT_USERNAME=${DATABASE_USERNAME}
       - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
     networks:
-      - backend_gonzu_bridge
+      - backend
 
   gonzu-web:
     container_name: gonzu-web
@@ -106,11 +106,8 @@ services:
     restart: always
     environment:
       - NODE_ENV=production
-    volumes:
-      - /app/s3/web:/app
-      - /app/s3/web/logs:/root/.npm/_logs
     networks:
-      - web_gonzu_bridge
+      - web
     labels:
       #### Labels define the behavior and rules of the traefik proxy for this container ####
       - 'traefik.enable=true' # <== Enable traefik to proxy this container
@@ -125,10 +122,8 @@ services:
     container_name: blog
     image: ghost:alpine
     restart: always
-    ports:
-      - 2368:2368
     volumes:
-      - /app/s3/blog:/var/lib/ghost/content
+      - /app/blog:/var/lib/ghost/content
     environment:
       # see https://docs.ghost.org/docs/config#section-running-ghost-with-config-env-variables
       database__client: mysql
@@ -137,13 +132,14 @@ services:
       database__connection__password: ${DATABASE_PASSWORD}
       database__connection__database: ghost
       # this url value is just an example, and is likely wrong for your environment!
-      #url: http://blog.${TLS_DOMAIN}
+      url: http://blog.${TLS_DOMAIN}
     networks:
-      - web_gonzu_bridge
-      - backend_gonzu_bridge
+      - web
+      - backend
     labels:
       #### Labels define the behavior and rules of the traefik proxy for this container ####
       - 'traefik.enable=true' # <== Enable traefik to proxy this container
+      - 'traefik.docker.network=gonzu_web'
       - 'traefik.http.routers.blog.rule=Host(`blog.${TLS_DOMAIN}`)' # <== Your Domain Name goes here for the http rule
       - 'traefik.http.routers.blog.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
       - 'traefik.http.routers.blog.middlewares=redirect@file' # <== This is a middleware to redirect to https
@@ -160,11 +156,12 @@ services:
     env_file:
       - .env
     networks:
-      - web_gonzu_bridge
-      - backend_gonzu_bridge
+      - web
+      - backend
     labels:
       #### Labels define the behavior and rules of the traefik proxy for this container ####
       - 'traefik.enable=true' # <== Enable traefik to proxy this container
+      - 'traefik.docker.network=gonzu_web'
       - 'traefik.http.routers.gonzu-api.rule=Host(`api.${TLS_DOMAIN}`)' # <== Your Domain Name goes here for the http rule
       - 'traefik.http.routers.gonzu-api.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
       - 'traefik.http.routers.gonzu-api.middlewares=redirect@file' # <== This is a middleware to redirect to https
@@ -176,14 +173,14 @@ networks:
   gonzu_overlay:
     driver: overlay
     attachable: true
-  web_gonzu_bridge:
+  web:
     driver: bridge
     driver_opts:
       parent: eth0
     ipam:
       config:
         - subnet: '192.168.0.0/24'
-  backend_gonzu_bridge:
+  backend:
     driver: bridge
     driver_opts:
       parent: eth0
