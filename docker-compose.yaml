@@ -20,7 +20,7 @@ services:
     command:
       #### These are the CLI commands that will configure Traefik and tell it how to work! ####
       ## API Settings - https://docs.traefik.io/operations/api/, endpoints - https://docs.traefik.io/operations/api/#endpoints ##
-      - --api.insecure=true # <== Enabling insecure api, NOT RECOMMENDED FOR PRODUCTION
+      - --api.insecure=false # <== Enabling insecure api, NOT RECOMMENDED FOR PRODUCTION
       - --api.dashboard=true # <== Enabling the dashboard to view services, middlewares, routers, etc...
       - --api.debug=true # <== Enabling additional endpoints for debugging and profiling
       ## Log Settings (options: ERROR, DEBUG, PANIC, FATAL, WARN, INFO) - https://docs.traefik.io/observability/logs/ ##
@@ -29,7 +29,7 @@ services:
       - --providers.docker=true # <== Enabling docker as the provider for traefik
       - --providers.docker.exposedbydefault=false # <== Don't expose every container to traefik, only expose enabled ones
       - --providers.file.filename=/dynamic.yaml # <== Referring to a dynamic configuration file
-      ## - --providers.docker.network=gonzu_web # <== Operate on the docker network named web
+      - --providers.docker.network=gonzu_web # <== Operate on the docker network named web
       ## Entrypoints Settings - https://docs.traefik.io/routing/entrypoints/#configuration ##
       - --entrypoints.web.address=:80 # <== Defining an entrypoint for port :80 named web
       - --entrypoints.web-secured.address=:443 # <== Defining an entrypoint for https on port :443 named web-secured
@@ -174,20 +174,23 @@ services:
       - 'HTTPS=OFF'
       - 'DISABLE_CLAMAV=TRUE'
       - 'DISABLE_RSPAMD=TRUE'
+      - 'HTTP_PORT=8880'
+      - 'HTTPS_PORT=4433'
     volumes:
       - /app/mail:/data
     networks:
-      - mail
+      - web
     labels:
       #### Labels define the behavior and rules of the traefik proxy for this container ####
       - 'traefik.enable=true' # <== Enable traefik to proxy this container
-      - 'traefik.http.services.mail.loadbalancer.server.port=80'
+      - 'traefik.docker.network=gonzu_web'
+      - 'traefik.http.services.mail.loadbalancer.server.port=8880'
       - 'traefik.http.routers.mail.rule=Host(`${SMTP_HOST}`)' # <== Your Domain Name goes here for the http rule
       - 'traefik.http.routers.mail.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
       - 'traefik.http.routers.mail.middlewares=redirect@file' # <== This is a middleware to redirect to https
       - 'traefik.http.routers.mail-secured.rule=Host(`${SMTP_HOST}`)' # <== Your Domain Name for the https rule
       - 'traefik.http.routers.mail-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
-      - 'traefik.http.services.mail-secured.loadbalancer.server.port=80'
+      - 'traefik.http.services.mail-secured.loadbalancer.server.port=4433'
       - 'traefik.http.routers.mail-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
       - 'traefik.tcp.routers.mail-smtp.rule=HostSNI(`*`)'
       - 'traefik.tcp.routers.mail-smtp.entrypoints=smtp'
