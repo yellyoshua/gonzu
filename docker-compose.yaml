@@ -9,10 +9,18 @@ services:
       - '80:80' # <== http
       - '8080:8080' # <== :8080 is where the dashboard runs on
       - '443:443' # <== https
+      - '25:25' #  SMTP - mostly processing incoming mails
+      - '110:110' #  POP3 - standard protocol for accessing mailbox, STARTTLS is required before client auth
+      - '143:143' #  IMAP - standard protocol for accessing mailbox, STARTTLS is required before client auth
+      - '587:587' #  MSA - SMTP port used primarily for email clients after STARTTLS and auth
+      - '993:993' #  IMAPS - alternative port for IMAP encrypted since connection
+      - '995:995' #  POP3S - encrypted POP3 since connections
+      - '465:465' #  SMTPS - Legacy SMTPs port
+      - '4190:4190' #  Sieve - Filters
     command:
       #### These are the CLI commands that will configure Traefik and tell it how to work! ####
       ## API Settings - https://docs.traefik.io/operations/api/, endpoints - https://docs.traefik.io/operations/api/#endpoints ##
-      - --api.insecure=false # <== Enabling insecure api, NOT RECOMMENDED FOR PRODUCTION
+      - --api.insecure=true # <== Enabling insecure api, NOT RECOMMENDED FOR PRODUCTION
       - --api.dashboard=true # <== Enabling the dashboard to view services, middlewares, routers, etc...
       - --api.debug=true # <== Enabling additional endpoints for debugging and profiling
       ## Log Settings (options: ERROR, DEBUG, PANIC, FATAL, WARN, INFO) - https://docs.traefik.io/observability/logs/ ##
@@ -21,10 +29,18 @@ services:
       - --providers.docker=true # <== Enabling docker as the provider for traefik
       - --providers.docker.exposedbydefault=false # <== Don't expose every container to traefik, only expose enabled ones
       - --providers.file.filename=/dynamic.yaml # <== Referring to a dynamic configuration file
-      - --providers.docker.network=gonzu_web # <== Operate on the docker network named web
+      ## - --providers.docker.network=gonzu_web # <== Operate on the docker network named web
       ## Entrypoints Settings - https://docs.traefik.io/routing/entrypoints/#configuration ##
       - --entrypoints.web.address=:80 # <== Defining an entrypoint for port :80 named web
       - --entrypoints.web-secured.address=:443 # <== Defining an entrypoint for https on port :443 named web-secured
+      - --entrypoints.smtp.address=:25 # <== Defining an entrypoint for port :25 named smtp
+      - --entrypoints.pop3.address=:110 # <== Defining an entrypoint for port :110 named pop3
+      - --entrypoints.imap.address=:143 # <== Defining an entrypoint for port :143 named imap
+      - --entrypoints.msa.address=:587 # <== Defining an entrypoint for port :587 named msa
+      - --entrypoints.imap-secured.address=:993 # <== Defining an entrypoint for port :993 named imap-secured
+      - --entrypoints.pop3-secured.address=:995 # <== Defining an entrypoint for port :995 named pop3-secured
+      - --entrypoints.smtp-secured.address=:465 # <== Defining an entrypoint for port :465 named smtp-secured
+      - --entrypoints.sieve.address=:4190 # <== Defining an entrypoint for port :4190 named sieve
       ## Certificate Settings (Let's Encrypt) -  https://docs.traefik.io/https/acme/#configuration-examples ##
       - --certificatesresolvers.mytlschallenge.acme.tlschallenge=true # <== Enable TLS-ALPN-01 to generate and renew ACME certs
       - --certificatesresolvers.mytlschallenge.acme.email=${TLS_EMAIL} # <== Setting email for certs
@@ -35,6 +51,7 @@ services:
       - /app/s3/letsencrypt:/letsencrypt
     networks:
       - web
+      - mail
     labels:
       #### Labels define the behavior and rules of the traefik proxy for this container ####
       - 'traefik.enable=true' # <== Enable traefik on itself to view dashboard and assign subdomain to view it
@@ -150,34 +167,68 @@ services:
 
   mail:
     container_name: mail
+    hostname: ${SMTP_HOST}
     image: analogic/poste.io
     restart: always
-    depends_on:
-      - traefik
-    ports:
-      - '25:25'
-      - '110:110'
-      - '143:143'
-      - '465:465'
-      - '587:587'
-      - '993:993'
-      - '995:995'
     environment:
-      HTTPS: OFF
+      - 'HTTPS=OFF'
+      - 'DISABLE_CLAMAV=TRUE'
+      - 'DISABLE_RSPAMD=TRUE'
     volumes:
       - /app/mail:/data
     networks:
-      - web
+      - mail
     labels:
       #### Labels define the behavior and rules of the traefik proxy for this container ####
       - 'traefik.enable=true' # <== Enable traefik to proxy this container
-      - 'traefik.docker.network=gonzu_web'
+      - 'traefik.http.services.mail.loadbalancer.server.port=80'
       - 'traefik.http.routers.mail.rule=Host(`${SMTP_HOST}`)' # <== Your Domain Name goes here for the http rule
       - 'traefik.http.routers.mail.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
       - 'traefik.http.routers.mail.middlewares=redirect@file' # <== This is a middleware to redirect to https
       - 'traefik.http.routers.mail-secured.rule=Host(`${SMTP_HOST}`)' # <== Your Domain Name for the https rule
       - 'traefik.http.routers.mail-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
+      - 'traefik.http.services.mail-secured.loadbalancer.server.port=80'
       - 'traefik.http.routers.mail-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
+      - 'traefik.tcp.routers.mail-smtp.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.mail-smtp.entrypoints=smtp'
+      - 'traefik.tcp.routers.mail-smtp.service=mail-smtp'
+      - 'traefik.tcp.services.mail-smtp.loadbalancer.method=wrr'
+      - 'traefik.tcp.services.mail-smtp.loadbalancer.server.port=25'
+      - 'traefik.tcp.routers.mail-pop3.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.mail-pop3.entrypoints=pop3'
+      - 'traefik.tcp.routers.mail-pop3.service=mail-pop3'
+      - 'traefik.tcp.services.mail-pop3.loadbalancer.method=wrr'
+      - 'traefik.tcp.services.mail-pop3.loadbalancer.server.port=110'
+      - 'traefik.tcp.routers.mail-imap.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.mail-imap.entrypoints=imap'
+      - 'traefik.tcp.routers.mail-imap.service=mail-imap'
+      - 'traefik.tcp.services.mail-imap.loadbalancer.method=wrr'
+      - 'traefik.tcp.services.mail-imap.loadbalancer.server.port=143'
+      - 'traefik.tcp.routers.mail-msa.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.mail-msa.entrypoints=msa'
+      - 'traefik.tcp.routers.mail-msa.service=mail-msa'
+      - 'traefik.tcp.services.mail-msa.loadbalancer.method=wrr'
+      - 'traefik.tcp.services.mail-msa.loadbalancer.server.port=587'
+      - 'traefik.tcp.routers.mail-imap-secured.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.mail-imap-secured.entrypoints=imap-secured'
+      - 'traefik.tcp.routers.mail-imap-secured.service=mail-imap-secured'
+      - 'traefik.tcp.services.mail-imap-secured.loadbalancer.method=wrr'
+      - 'traefik.tcp.services.mail-imap-secured.loadbalancer.server.port=993'
+      - 'traefik.tcp.routers.mail-pop3-secured.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.mail-pop3-secured.entrypoints=pop3-secured'
+      - 'traefik.tcp.routers.mail-pop3-secured.service=mail-pop3-secured'
+      - 'traefik.tcp.services.mail-pop3-secured.loadbalancer.method=wrr'
+      - 'traefik.tcp.services.mail-pop3-secured.loadbalancer.server.port=995'
+      - 'traefik.tcp.routers.mail-smtp-secured.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.mail-smtp-secured.entrypoints=smtp-secured'
+      - 'traefik.tcp.routers.mail-smtp-secured.service=mail-smtp-secured'
+      - 'traefik.tcp.services.mail-smtp-secured.loadbalancer.method=wrr'
+      - 'traefik.tcp.services.mail-smtp-secured.loadbalancer.server.port=465'
+      - 'traefik.tcp.routers.mail-sieve.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.mail-sieve.entrypoints=sieve'
+      - 'traefik.tcp.routers.mail-sieve.service=mail-sieve'
+      - 'traefik.tcp.services.mail-sieve.loadbalancer.method=wrr'
+      - 'traefik.tcp.services.mail-sieve.loadbalancer.server.port=4190'
 
   gonzu-api:
     container_name: gonzu-api
@@ -217,6 +268,13 @@ networks:
     ipam:
       config:
         - subnet: '192.168.0.0/24'
+  mail:
+    driver: bridge
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: '192.158.0.0/24'
   backend:
     driver: bridge
     driver_opts:
