@@ -171,11 +171,12 @@ services:
     image: analogic/poste.io
     restart: always
     environment:
-      - 'HTTPS=OFF'
-      - 'DISABLE_CLAMAV=TRUE'
-      - 'DISABLE_RSPAMD=TRUE'
-      - 'HTTP_PORT=8880'
-      - 'HTTPS_PORT=4433'
+      - HTTPS=OFF
+      - DISABLE_CLAMAV=TRUE
+      - DISABLE_RSPAMD=TRUE
+      - HOSTNAME=${SMTP_HOST}
+      - PUID=1000
+      - PGID=1000
     volumes:
       - /app/mail:/data
     networks:
@@ -184,14 +185,13 @@ services:
       #### Labels define the behavior and rules of the traefik proxy for this container ####
       - 'traefik.enable=true' # <== Enable traefik to proxy this container
       - 'traefik.docker.network=gonzu_web'
-      - 'traefik.http.services.mail.loadbalancer.server.port=8880'
       - 'traefik.http.routers.mail.rule=Host(`${SMTP_HOST}`)' # <== Your Domain Name goes here for the http rule
       - 'traefik.http.routers.mail.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
       - 'traefik.http.routers.mail.middlewares=redirect@file' # <== This is a middleware to redirect to https
       - 'traefik.http.routers.mail-secured.rule=Host(`${SMTP_HOST}`)' # <== Your Domain Name for the https rule
       - 'traefik.http.routers.mail-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
-      - 'traefik.http.services.mail-secured.loadbalancer.server.port=4433'
       - 'traefik.http.routers.mail-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
+      - 'traefik.http.services.mail-secured.loadbalancer.server.port=80'
       - 'traefik.tcp.routers.mail-smtp.rule=HostSNI(`*`)'
       - 'traefik.tcp.routers.mail-smtp.entrypoints=smtp'
       - 'traefik.tcp.routers.mail-smtp.service=mail-smtp'
