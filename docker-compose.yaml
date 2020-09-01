@@ -26,14 +26,14 @@ services:
       ## Entrypoints Settings - https://docs.traefik.io/routing/entrypoints/#configuration ##
       - --entrypoints.web.address=:80 # <== Defining an entrypoint for port :80 named web
       - --entrypoints.web-secured.address=:443 # <== Defining an entrypoint for https on port :443 named web-secured
-      # - --entrypoints.smtp.address=:25 # <== Defining an entrypoint for port :25 named smtp
-      # - --entrypoints.pop3.address=:110 # <== Defining an entrypoint for port :110 named pop3
-      # - --entrypoints.imap.address=:143 # <== Defining an entrypoint for port :143 named imap
-      # - --entrypoints.msa.address=:587 # <== Defining an entrypoint for port :587 named msa
-      # - --entrypoints.imap-secured.address=:993 # <== Defining an entrypoint for port :993 named imap-secured
-      # - --entrypoints.pop3-secured.address=:995 # <== Defining an entrypoint for port :995 named pop3-secured
-      # - --entrypoints.smtp-secured.address=:465 # <== Defining an entrypoint for port :465 named smtp-secured
-      # - --entrypoints.sieve.address=:4190 # <== Defining an entrypoint for port :4190 named sieve
+      - --entrypoints.smtp.address=:25 # <== Defining an entrypoint for port :25 named smtp
+      - --entrypoints.pop3.address=:110 # <== Defining an entrypoint for port :110 named pop3
+      - --entrypoints.imap.address=:143 # <== Defining an entrypoint for port :143 named imap
+      - --entrypoints.msa.address=:587 # <== Defining an entrypoint for port :587 named msa
+      - --entrypoints.imap-secured.address=:993 # <== Defining an entrypoint for port :993 named imap-secured
+      - --entrypoints.pop3-secured.address=:995 # <== Defining an entrypoint for port :995 named pop3-secured
+      - --entrypoints.smtp-secured.address=:465 # <== Defining an entrypoint for port :465 named smtp-secured
+      - --entrypoints.sieve.address=:4190 # <== Defining an entrypoint for port :4190 named sieve
       ## Certificate Settings (Let's Encrypt) -  https://docs.traefik.io/https/acme/#configuration-examples ##
       - --certificatesresolvers.mytlschallenge.acme.tlschallenge=true # <== Enable TLS-ALPN-01 to generate and renew ACME certs
       - --certificatesresolvers.mytlschallenge.acme.email=${TLS_EMAIL} # <== Setting email for certs
@@ -202,15 +202,15 @@ services:
       - PGID=1000
     volumes:
       - /app/mail:/data
-    ports:
-      - '25:25' #  SMTP - mostly processing incoming mails
-      - '110:110' #  POP3 - standard protocol for accessing mailbox, STARTTLS is required before client auth
-      - '143:143' #  IMAP - standard protocol for accessing mailbox, STARTTLS is required before client auth
-      - '587:587' #  MSA - SMTP port used primarily for email clients after STARTTLS and auth
-      - '993:993' #  IMAPS - alternative port for IMAP encrypted since connection
-      - '995:995' #  POP3S - encrypted POP3 since connections
-      - '465:465' #  SMTPS - Legacy SMTPs port
-      - '4190:4190' #  Sieve - Filters
+    # ports:
+    #   - '25:25' #  SMTP - mostly processing incoming mails
+    #   - '110:110' #  POP3 - standard protocol for accessing mailbox, STARTTLS is required before client auth
+    #   - '143:143' #  IMAP - standard protocol for accessing mailbox, STARTTLS is required before client auth
+    #   - '587:587' #  MSA - SMTP port used primarily for email clients after STARTTLS and auth
+    #   - '993:993' #  IMAPS - alternative port for IMAP encrypted since connection
+    #   - '995:995' #  POP3S - encrypted POP3 since connections
+    #   - '465:465' #  SMTPS - Legacy SMTPs port
+    #   - '4190:4190' #  Sieve - Filters
     networks:
       - web
     labels:
@@ -225,46 +225,46 @@ services:
       - 'traefik.http.routers.mail-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
       - 'traefik.http.routers.mail-secured.service=mail-secured-svc'
       - 'traefik.http.services.mail-secured-svc.loadbalancer.server.port=80'
-      # - 'traefik.tcp.routers.mail-smtp.rule=HostSNI(`${SMTP_HOST}`)'
-      # - 'traefik.tcp.routers.mail-smtp.entrypoints=smtp'
-      # - 'traefik.tcp.routers.mail-smtp.service=mail-smtp-svc'
-      # - 'traefik.tcp.services.mail-smtp-svc.loadbalancer.server.port=25'
-      # # - 'traefik.tcp.services.mail-smtp-svc.loadbalancer.method=wrr'
-      # - 'traefik.tcp.routers.mail-pop3.rule=HostSNI(`${SMTP_HOST}`)'
-      # - 'traefik.tcp.routers.mail-pop3.entrypoints=pop3'
-      # - 'traefik.tcp.routers.mail-pop3.service=mail-pop3-svc'
-      # - 'traefik.tcp.services.mail-pop3-svc.loadbalancer.server.port=110'
-      # # - 'traefik.tcp.services.mail-pop3-svc.loadbalancer.method=wrr'
-      # - 'traefik.tcp.routers.mail-imap.rule=HostSNI(`${SMTP_HOST}`)'
-      # - 'traefik.tcp.routers.mail-imap.entrypoints=imap'
-      # - 'traefik.tcp.routers.mail-imap.service=mail-imap-svc'
-      # - 'traefik.tcp.services.mail-imap-svc.loadbalancer.server.port=143'
-      # # - 'traefik.tcp.services.mail-imap-svc.loadbalancer.method=wrr'
-      # - 'traefik.tcp.routers.mail-msa.rule=HostSNI(`${SMTP_HOST}`)'
-      # - 'traefik.tcp.routers.mail-msa.entrypoints=msa'
-      # - 'traefik.tcp.routers.mail-msa.service=mail-msa-svc'
-      # - 'traefik.tcp.services.mail-msa-svc.loadbalancer.server.port=587'
-      # # - 'traefik.tcp.services.mail-msa-svc.loadbalancer.method=wrr'
-      # - 'traefik.tcp.routers.mail-imap-secured.rule=HostSNI(`${SMTP_HOST}`)'
-      # - 'traefik.tcp.routers.mail-imap-secured.entrypoints=imap-secured'
-      # - 'traefik.tcp.routers.mail-imap-secured.service=mail-imap-secured-svc'
-      # - 'traefik.tcp.services.mail-imap-secured-svc.loadbalancer.server.port=993'
-      # # - 'traefik.tcp.services.mail-imap-secured-svc.loadbalancer.method=wrr'
-      # - 'traefik.tcp.routers.mail-pop3-secured.rule=HostSNI(`${SMTP_HOST}`)'
-      # - 'traefik.tcp.routers.mail-pop3-secured.entrypoints=pop3-secured'
-      # - 'traefik.tcp.routers.mail-pop3-secured.service=mail-pop3-secured-svc'
-      # - 'traefik.tcp.services.mail-pop3-secured-svc.loadbalancer.server.port=995'
-      # # - 'traefik.tcp.services.mail-pop3-secured-svc.loadbalancer.method=wrr'
-      # - 'traefik.tcp.routers.mail-smtp-secured.rule=HostSNI(`${SMTP_HOST}`)'
-      # - 'traefik.tcp.routers.mail-smtp-secured.entrypoints=smtp-secured'
-      # - 'traefik.tcp.routers.mail-smtp-secured.service=mail-smtp-secured-svc'
-      # - 'traefik.tcp.services.mail-smtp-secured-svc.loadbalancer.server.port=465'
-      # # - 'traefik.tcp.services.mail-smtp-secured-svc.loadbalancer.method=wrr'
-      # - 'traefik.tcp.routers.mail-sieve.rule=HostSNI(`${SMTP_HOST}`)'
-      # - 'traefik.tcp.routers.mail-sieve.entrypoints=sieve'
-      # - 'traefik.tcp.routers.mail-sieve.service=mail-sieve-svc'
-      # - 'traefik.tcp.services.mail-sieve-svc.loadbalancer.server.port=4190'
-      # # - 'traefik.tcp.services.mail-sieve-svc.loadbalancer.method=wrr'
+      - 'traefik.tcp.routers.mail-smtp.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.mail-smtp.entrypoints=smtp'
+      - 'traefik.tcp.routers.mail-smtp.service=mail-smtp-svc'
+      - 'traefik.tcp.services.mail-smtp-svc.loadbalancer.server.port=25'
+      # - 'traefik.tcp.services.mail-smtp-svc.loadbalancer.method=wrr'
+      - 'traefik.tcp.routers.mail-pop3.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.mail-pop3.entrypoints=pop3'
+      - 'traefik.tcp.routers.mail-pop3.service=mail-pop3-svc'
+      - 'traefik.tcp.services.mail-pop3-svc.loadbalancer.server.port=110'
+      # - 'traefik.tcp.services.mail-pop3-svc.loadbalancer.method=wrr'
+      - 'traefik.tcp.routers.mail-imap.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.mail-imap.entrypoints=imap'
+      - 'traefik.tcp.routers.mail-imap.service=mail-imap-svc'
+      - 'traefik.tcp.services.mail-imap-svc.loadbalancer.server.port=143'
+      # - 'traefik.tcp.services.mail-imap-svc.loadbalancer.method=wrr'
+      - 'traefik.tcp.routers.mail-msa.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.mail-msa.entrypoints=msa'
+      - 'traefik.tcp.routers.mail-msa.service=mail-msa-svc'
+      - 'traefik.tcp.services.mail-msa-svc.loadbalancer.server.port=587'
+      # - 'traefik.tcp.services.mail-msa-svc.loadbalancer.method=wrr'
+      - 'traefik.tcp.routers.mail-imap-secured.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.mail-imap-secured.entrypoints=imap-secured'
+      - 'traefik.tcp.routers.mail-imap-secured.service=mail-imap-secured-svc'
+      - 'traefik.tcp.services.mail-imap-secured-svc.loadbalancer.server.port=993'
+      # - 'traefik.tcp.services.mail-imap-secured-svc.loadbalancer.method=wrr'
+      - 'traefik.tcp.routers.mail-pop3-secured.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.mail-pop3-secured.entrypoints=pop3-secured'
+      - 'traefik.tcp.routers.mail-pop3-secured.service=mail-pop3-secured-svc'
+      - 'traefik.tcp.services.mail-pop3-secured-svc.loadbalancer.server.port=995'
+      # - 'traefik.tcp.services.mail-pop3-secured-svc.loadbalancer.method=wrr'
+      - 'traefik.tcp.routers.mail-smtp-secured.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.mail-smtp-secured.entrypoints=smtp-secured'
+      - 'traefik.tcp.routers.mail-smtp-secured.service=mail-smtp-secured-svc'
+      - 'traefik.tcp.services.mail-smtp-secured-svc.loadbalancer.server.port=465'
+      # - 'traefik.tcp.services.mail-smtp-secured-svc.loadbalancer.method=wrr'
+      - 'traefik.tcp.routers.mail-sieve.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.mail-sieve.entrypoints=sieve'
+      - 'traefik.tcp.routers.mail-sieve.service=mail-sieve-svc'
+      - 'traefik.tcp.services.mail-sieve-svc.loadbalancer.server.port=4190'
+      # - 'traefik.tcp.services.mail-sieve-svc.loadbalancer.method=wrr'
 
   gonzu-api:
     container_name: gonzu-api
