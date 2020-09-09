@@ -58,62 +58,40 @@ services:
       - 'traefik.http.routers.api.rule=Host(`monitor.${TLS_DOMAIN}`)' # <== Setting the domain for the dashboard
       - 'traefik.http.routers.api.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
       - 'traefik.http.routers.api.service=api@internal' # <== Enabling the api to be a service to access
-
-      - 'traefik.http.routers.api.middlewares=redirect@file' # <== This is a middleware to redirect to https
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.scheme=https' # <== This is a middleware scheme to https
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.permanent=true' # <== This is a middleware to permanent redirect
+      - 'traefik.http.routers.api.middlewares=redirect-https@docker' # <== This is a middleware to redirect to https
+      # - 'traefik.http.routers.api.middlewares=redirect@file' # <== This is a middleware to redirect to https
       - 'traefik.http.routers.api-secured.rule=Host(`monitor.${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
       - 'traefik.http.routers.api-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
       - 'traefik.http.routers.api-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
       - 'traefik.http.routers.api-secured.service=api@internal' # <== Enabling the api to be a service to access
 
-  tienda:
-    container_name: tienda
-    image: prestashop/prestashop:nightly-7.2-apache
+  backups:
+    container_name: backups
+    image: linuxserver/duplicati:latest
     volumes:
-      - /app/tienda:/var/www/html
+      - /app/backups/config:/config
+      - /app/backups/data:/backups
+      - /app:/source
     environment:
-      - DB_SERVER=${DATABASE_HOST}
-      - DB_USER=${DATABASE_USERNAME}
-      - DB_PASSWD=${DATABASE_PASSWORD}
-      - VIRTUAL_HOST=tienda.${TLS_DOMAIN}
-      - DB_NAME=tienda
-      - PS_LANGUAGE=es
-      - PS_COUNTRY=ec
-      - PS_FOLDER_ADMIN=ghost
-    networks:
-      - web
-      - backend
-    labels:
-      #### Labels define the behavior and rules of the traefik proxy for this container ####
-      - 'traefik.enable=true' # <== Enable traefik to proxy this container
-      - 'traefik.http.routers.shop.rule=Host(`tienda.${TLS_DOMAIN}`)' # <== Your Domain Name goes here for the http rule
-      - 'traefik.http.routers.shop.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
-      - 'traefik.http.routers.shop.service=shop-svc'
-      - 'traefik.http.services.shop-svc.loadbalancer.server.port=80'
-      - 'traefik.http.routers.shop.middlewares=redirect@file' # <== This is a middleware to redirect to https
-      - 'traefik.http.routers.shop-secured.rule=Host(`tienda.${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
-      - 'traefik.http.routers.shop-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
-      - 'traefik.http.routers.shop-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
-      - 'traefik.http.routers.shop-secured.service=shop-secured-svc'
-      - 'traefik.http.services.shop-secured-svc.loadbalancer.server.port=80'
-
-  netdata:
-    container_name: netdata
-    image: netdata/netdata
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - PUID=1001
+      - PGID=1001
+      - TZ=America/Guayaquil
     networks:
       - web
     labels:
       #### Labels define the behavior and rules of the traefik proxy for this container ####
       - 'traefik.enable=true' # <== Enable traefik to proxy this container
-      - 'traefik.http.routers.netdata.rule=Host(`stats.${TLS_DOMAIN}`)' # <== Your Domain Name goes here for the http rule
-      - 'traefik.http.routers.netdata.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
-      - 'traefik.http.routers.netdata.middlewares=redirect@file' # <== This is a middleware to redirect to https
-      - 'traefik.http.routers.netdata-secured.rule=Host(`stats.${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
-      - 'traefik.http.routers.netdata-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
-      - 'traefik.http.routers.netdata-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
+      - 'traefik.http.routers.backups.rule=Host(`backups.${TLS_DOMAIN}`)' # <== Your Domain Name goes here for the http rule
+      - 'traefik.http.routers.backups.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.scheme=https' # <== This is a middleware scheme to https
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.permanent=true' # <== This is a middleware to permanent redirect
+      - 'traefik.http.routers.backups.middlewares=redirect-https@docker' # <== This is a middleware to redirect to https
+      # - 'traefik.http.routers.backups.middlewares=redirect@file' # <== This is a middleware to redirect to https
+      - 'traefik.http.routers.backups-secured.rule=Host(`backups.${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
+      - 'traefik.http.routers.backups-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
+      - 'traefik.http.routers.backups-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
 
   portainer:
     container_name: portainer
@@ -121,6 +99,7 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /app/portainer:/data
     networks:
       - web
     labels:
@@ -128,7 +107,10 @@ services:
       - 'traefik.enable=true' # <== Enable traefik to proxy this container
       - 'traefik.http.routers.portainer.rule=Host(`portainer.${TLS_DOMAIN}`)' # <== Your Domain Name goes here for the http rule
       - 'traefik.http.routers.portainer.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
-      - 'traefik.http.routers.portainer.middlewares=redirect@file' # <== This is a middleware to redirect to https
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.scheme=https' # <== This is a middleware scheme to https
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.permanent=true' # <== This is a middleware to permanent redirect
+      - 'traefik.http.routers.portainer.middlewares=redirect-https@docker' # <== This is a middleware to redirect to https
+      # - 'traefik.http.routers.portainer.middlewares=redirect@file' # <== This is a middleware to redirect to https
       - 'traefik.http.routers.portainer-secured.rule=Host(`portainer.${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
       - 'traefik.http.routers.portainer-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
       - 'traefik.http.routers.portainer-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
@@ -161,7 +143,10 @@ services:
       - 'traefik.enable=true' # <== Enable traefik to proxy this container
       - 'traefik.http.routers.gonzu-web.rule=Host(`${TLS_DOMAIN}`,`www.${TLS_DOMAIN}`)' # <== Your Domain Name goes here for the http rule
       - 'traefik.http.routers.gonzu-web.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
-      - 'traefik.http.routers.gonzu-web.middlewares=redirect@file' # <== This is a middleware to redirect to https
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.scheme=https' # <== This is a middleware scheme to https
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.permanent=true' # <== This is a middleware to permanent redirect
+      - 'traefik.http.routers.gonzu-web.middlewares=redirect-https@docker' # <== This is a middleware to redirect to https
+      # - 'traefik.http.routers.gonzu-web.middlewares=redirect@file' # <== This is a middleware to redirect to https
       - 'traefik.http.routers.gonzu-web-secured.rule=Host(`${TLS_DOMAIN}`,`www.${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
       - 'traefik.http.routers.gonzu-web-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
       - 'traefik.http.routers.gonzu-web-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
@@ -170,6 +155,10 @@ services:
     container_name: blog
     image: yellyoshua/ghost-on-heroku:latest
     restart: always
+    volumes:
+      - /app/blog/settings:/srv/ghost-on-heroku/content/settings
+      - /app/blog/themes:/srv/ghost-on-heroku/content/themes
+      - /app/blog/data:/srv/ghost-on-heroku/content/data
     depends_on:
       - mysql
     environment:
@@ -189,12 +178,17 @@ services:
       #### Labels define the behavior and rules of the traefik proxy for this container ####
       - 'traefik.enable=true' # <== Enable traefik to proxy this container
       - 'traefik.docker.network=gonzu_web'
-      - 'traefik.http.routers.blog.rule=Host(`${TLS_DOMAIN}`)' # <== Your Domain Name goes here for the http rule
+      - 'traefik.http.routers.blog.rule=Host(`${TLS_DOMAIN}`,`www.${TLS_DOMAIN}`)' # <== Your Domain Name goes here for the http rule
       - 'traefik.http.routers.blog.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
-      - 'traefik.http.routers.blog.middlewares=redirect@file' # <== This is a middleware to redirect to https
-      - 'traefik.http.routers.blog-secured.rule=Host(`${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.scheme=https' # <== This is a middleware scheme to https
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.permanent=true' # <== This is a middleware to permanent redirect
+      - 'traefik.http.routers.blog.middlewares=redirect-https@docker' # <== This is a middleware to redirect to https
+      # - 'traefik.http.routers.blog.middlewares=redirect@file' # <== This is a middleware to redirect to https
+      - 'traefik.http.routers.blog-secured.rule=Host(`${TLS_DOMAIN}`,`www.${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
       - 'traefik.http.routers.blog-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
       - 'traefik.http.routers.blog-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
+      - 'traefik.http.routers.blog-secured.service=blog-secured-svc'
+      - 'traefik.http.services.blog-secured-svc.loadbalancer.server.port=2368'
 
   mail:
     container_name: mail
@@ -210,15 +204,6 @@ services:
       - PGID=1000
     volumes:
       - /app/mail:/data
-    # ports:
-    #   - '25:25' #  SMTP - mostly processing incoming mails
-    #   - '110:110' #  POP3 - standard protocol for accessing mailbox, STARTTLS is required before client auth
-    #   - '143:143' #  IMAP - standard protocol for accessing mailbox, STARTTLS is required before client auth
-    #   - '587:587' #  MSA - SMTP port used primarily for email clients after STARTTLS and auth
-    #   - '993:993' #  IMAPS - alternative port for IMAP encrypted since connection
-    #   - '995:995' #  POP3S - encrypted POP3 since connections
-    #   - '465:465' #  SMTPS - Legacy SMTPs port
-    #   - '4190:4190' #  Sieve - Filters
     networks:
       - web
     labels:
@@ -227,7 +212,10 @@ services:
       - 'traefik.docker.network=gonzu_web'
       - 'traefik.http.routers.mail.rule=Host(`${SMTP_HOST}`)' # <== Your Domain Name goes here for the http rule
       - 'traefik.http.routers.mail.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
-      - 'traefik.http.routers.mail.middlewares=redirect@file' # <== This is a middleware to redirect to https
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.scheme=https' # <== This is a middleware scheme to https
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.permanent=true' # <== This is a middleware to permanent redirect
+      - 'traefik.http.routers.mail.middlewares=redirect-https@docker' # <== This is a middleware to redirect to https
+      # - 'traefik.http.routers.mail.middlewares=redirect@file' # <== This is a middleware to redirect to https
       - 'traefik.http.routers.mail-secured.rule=Host(`${SMTP_HOST}`)' # <== Your Domain Name for the https rule
       - 'traefik.http.routers.mail-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
       - 'traefik.http.routers.mail-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
@@ -295,16 +283,15 @@ services:
       - 'traefik.docker.network=gonzu_web'
       - 'traefik.http.routers.gonzu-api.rule=Host(`api.${TLS_DOMAIN}`)' # <== Your Domain Name goes here for the http rule
       - 'traefik.http.routers.gonzu-api.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
-      - 'traefik.http.routers.gonzu-api.middlewares=redirect@file' # <== This is a middleware to redirect to https
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.scheme=https' # <== This is a middleware scheme to https
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.permanent=true' # <== This is a middleware to permanent redirect
+      - 'traefik.http.routers.gonzu-api.middlewares=redirect-https@docker' # <== This is a middleware to redirect to https
+      # - 'traefik.http.routers.gonzu-api.middlewares=redirect@file' # <== This is a middleware to redirect to https
       - 'traefik.http.routers.gonzu-api-secured.rule=Host(`api.${TLS_DOMAIN}`)' # <== Your Domain Name for the https rule
       - 'traefik.http.routers.gonzu-api-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
       - 'traefik.http.routers.gonzu-api-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
 
 networks:
-  # Docker Swarm
-  # gonzu_overlay:
-  #   driver: overlay
-  #   attachable: true
   web:
     driver: bridge
     driver_opts:
