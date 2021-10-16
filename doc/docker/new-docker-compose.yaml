@@ -1,0 +1,168 @@
+version: '3.3'
+
+services:
+  traefik:
+    container_name: traefik
+    image: traefik:latest
+    restart: always
+    ports:
+      - '80:80' # <== http
+      - '8080:8080' # <== :8080 is where the dashboard runs on
+      - '443:443' # <== https
+      - '25:25' #  SMTP - mostly processing incoming mails
+      - '465:465' #  SMTPS - Legacy SMTPs port
+    command:
+      #### These are the CLI commands that will configure Traefik and tell it how to work! ####
+      ## API Settings - https://docs.traefik.io/operations/api/, endpoints - https://docs.traefik.io/operations/api/#endpoints ##
+      - --api=true
+      - --ping=true
+      - --ping.entryPoint=web
+      - --ping.manualrouting=true
+      - --api.insecure=false # <== Enabling insecure api, NOT RECOMMENDED FOR PRODUCTION
+      - --api.dashboard=true # <== Enabling the dashboard to view services, middlewares, routers, etc...
+      - --api.debug=true # <== Enabling additional endpoints for debugging and profiling
+      ## Log Settings (options: ERROR, DEBUG, PANIC, FATAL, WARN, INFO) - https://docs.traefik.io/observability/logs/ ##
+      - --log.level=DEBUG # <== Setting the level of the logs from traefik
+      ## Provider Settings - https://docs.traefik.io/providers/docker/#provider-configuration ##
+      - --providers.docker=true # <== Enabling docker as the provider for traefik
+      - --providers.docker.exposedbydefault=false # <== Don't expose every container to traefik, only expose enabled ones
+      - --providers.file.filename=/traefik-app/dynamic.yaml # <== Referring to a dynamic configuration file
+      - --providers.docker.network=gonzu_web # <== Operate on the docker network named web
+      ## Entrypoints Settings - https://docs.traefik.io/routing/entrypoints/#configuration ##
+      - --entrypoints.web.address=:80 # <== Defining an entrypoint for port :80 named web
+      - --entrypoints.web-secured.address=:443 # <== Defining an entrypoint for https on port :443 named web-secured
+      - --entrypoints.smtp.address=:25 # <== Defining an entrypoint for port :25 named smtp
+      - --entrypoints.smtp-secured.address=:465 # <== Defining an entrypoint for port :465 named smtp-secured
+      ## Certificate Settings (Let's Encrypt) -  https://docs.traefik.io/https/acme/#configuration-examples ##
+      - --certificatesresolvers.mytlschallenge.acme.tlschallenge=true # <== Enable TLS-ALPN-01 to generate and renew ACME certs
+      - --certificatesresolvers.mytlschallenge.acme.email=yoshualopez1529@gmail.com # <== Setting email for certs
+      - --certificatesresolvers.mytlschallenge.acme.storage=/traefik-app/letsencrypt/acme.json # <== Defining acme file to store cert information
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      # /traefik-app/letsencrypt -> save's all https certs of domains
+      # /traefik-app/dynamic.yaml -> traefik config file
+      - ./traefik:/traefik-app
+    networks:
+      - web
+    labels:
+      #### Labels define the behavior and rules of the traefik proxy for this container ####
+      - 'traefik.enable=true' # <== Enable traefik on itself to view dashboard and assign subdomain to view it
+      - 'traefik.http.routers.api.rule=Host(`monitor.gonzu.edu.ec`)' # <== Setting the domain for the dashboard
+      - 'traefik.http.routers.api.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
+      - 'traefik.http.routers.api.service=api@internal' # <== Enabling the api to be a service to access
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.scheme=https' # <== This is a middleware scheme to https
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.permanent=true' # <== This is a middleware to permanent redirect
+      - 'traefik.http.routers.api.middlewares=redirect-https@docker' # <== This is a middleware to redirect to https
+      # - 'traefik.http.routers.api.middlewares=redirect@file' # <== This is a middleware to redirect to https
+      - 'traefik.http.routers.api-secured.rule=Host(`monitor.gonzu.edu.ec`)' # <== Your Domain Name for the https rule
+      - 'traefik.http.routers.api-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
+      - 'traefik.http.routers.api-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
+      - 'traefik.http.routers.api-secured.service=api@internal' # <== Enabling the api to be a service to access
+
+      #### Labels define the behavior and rules of the traefik proxy for this container ####
+      - 'traefik.http.routers.ping-path.rule=Host(`status.gonzu.edu.ec`)' # <== Setting the domain for the dashboard
+      - 'traefik.http.routers.ping-path.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
+      - 'traefik.http.routers.ping-path.service=ping@internal' # <== Enabling the api to be a service to access
+      - 'traefik.http.routers.ping-path.middlewares=redirect-https@docker' # <== This is a middleware to redirect to https
+      # - 'traefik.http.routers.ping-path.middlewares=redirect@file' # <== This is a middleware to redirect to https
+      - 'traefik.http.routers.ping-path-secured.rule=Host(`status.gonzu.edu.ec`)' # <== Your Domain Name for the https rule
+      - 'traefik.http.routers.ping-path-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
+      - 'traefik.http.routers.ping-path-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
+      - 'traefik.http.routers.ping-path-secured.service=ping@internal' # <== Enabling the api to be a service to access
+
+  blog:
+    container_name: blog
+    image: ghost:alpine
+    restart: always
+    volumes:
+      - ./content/blog:/var/lib/ghost/content
+    depends_on:
+      - traefik
+    env_file:
+      - .env
+    environment:
+      PORT: 2368
+      url: https://www.gonzu.edu.ec
+      admin__url: https://admin.gonzu.edu.ec/ghost
+    networks:
+      - web
+    labels:
+      #### Labels define the behavior and rules of the traefik proxy for this container ####
+      - 'traefik.enable=true' # <== Enable traefik to proxy this container
+      - 'traefik.docker.network=gonzu_web'
+      - 'traefik.http.routers.blog.rule=Host(`admin.gonzu.edu.ec`,`www.gonzu.edu.ec`)' # <== Your Domain Name goes here for the http rule
+      - 'traefik.http.routers.blog.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.scheme=https' # <== This is a middleware scheme to https
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.permanent=true' # <== This is a middleware to permanent redirect
+      - 'traefik.http.routers.blog.middlewares=redirect-https@docker' # <== This is a middleware to redirect to https
+      # - 'traefik.http.routers.blog.middlewares=redirect@file' # <== This is a middleware to redirect to https
+      - 'traefik.http.routers.blog-secured.rule=Host(`admin.gonzu.edu.ec`,`www.gonzu.edu.ec`)' # <== Your Domain Name for the https rule
+      - 'traefik.http.routers.blog-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
+      - 'traefik.http.routers.blog-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
+      - 'traefik.http.routers.blog-secured.service=blog-secured-svc'
+      - 'traefik.http.services.blog-secured-svc.loadbalancer.server.port=2368'
+  blog-staging:
+    container_name: blog-staging
+    image: ghost:alpine
+    restart: always
+    volumes:
+      - ./content/blog-staging:/var/lib/ghost/content
+    depends_on:
+      - traefik
+    env_file:
+      - .env
+    environment:
+      PORT: 2368
+      url: https://staging.gonzu.edu.ec
+      admin__url: https://staging.gonzu.edu.ec/ghost
+    networks:
+      - web
+    labels:
+      #### Labels define the behavior and rules of the traefik proxy for this container ####
+      - 'traefik.enable=true' # <== Enable traefik to proxy this container
+      - 'traefik.docker.network=gonzu_web'
+      - 'traefik.http.routers.blog-staging.rule=Host(`staging.gonzu.edu.ec`)' # <== Your Domain Name goes here for the http rule
+      - 'traefik.http.routers.blog-staging.entrypoints=web' # <== Defining the entrypoint for http, **ref: line 30
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.scheme=https' # <== This is a middleware scheme to https
+      - 'traefik.http.middlewares.redirect-https.redirectscheme.permanent=true' # <== This is a middleware to permanent redirect
+      - 'traefik.http.routers.blog-staging.middlewares=redirect-https@docker' # <== This is a middleware to redirect to https
+      # - 'traefik.http.routers.blog.middlewares=redirect@file' # <== This is a middleware to redirect to https
+      - 'traefik.http.routers.blog-staging-secured.rule=Host(`staging.gonzu.edu.ec`)' # <== Your Domain Name for the https rule
+      - 'traefik.http.routers.blog-staging-secured.entrypoints=web-secured' # <== Defining entrypoint for https, **ref: line 31
+      - 'traefik.http.routers.blog-staging-secured.tls.certresolver=mytlschallenge' # <== Defining certsresolvers for https
+      - 'traefik.http.routers.blog-staging-secured.service=blog-staging-secured-svc'
+      - 'traefik.http.services.blog-staging-secured-svc.loadbalancer.server.port=2368'
+
+  wireguard:
+    image: ghcr.io/linuxserver/wireguard
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Guayaquil
+      # - SERVERURL=wireguard.domain.com #optional
+      - SERVERPORT=51820 #optional
+      - PEERS=3 #optional
+      - PEERDNS=1.1.1.1 #optional
+      - INTERNAL_SUBNET=10.13.13.0 #optional
+      - ALLOWEDIPS=0.0.0.0/0 #optional
+    volumes:
+      - ./vpn/config:/config
+      - /lib/modules:/lib/modules
+    ports:
+      - 51820:51820/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
+
+networks:
+  web:
+    driver: bridge
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: '192.168.0.0/24'

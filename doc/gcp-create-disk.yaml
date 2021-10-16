@@ -1,0 +1,4 @@
+# Para crear un disco persistente en GCE
+- gcloud compute disks create --size=500GB --zone=us-central1-a disk-name 
+# Para crear los namespaces
+- kubectl create -f ./namespaces.yaml
