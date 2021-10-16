@@ -1,4 +1,4 @@
-import { Layout, Projects, SortResumeAboutMe } from '@/ui/index'
+import { Layout } from '@/ui/index'
 
 export default function IndexPage() {
   return <Layout>
