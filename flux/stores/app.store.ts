@@ -7,7 +7,8 @@ import * as reducers from "../reducers";
 interface FullReducer extends AppReducer, AppReducerActions { }
 
 const initialState: AppReducer = {
-  name: APP_NAME,
+  title: APP_NAME,
+  loading: false,
   socialLinks: SOCIAL_LINKS,
   copyright: COPYRIGHT,
 }
