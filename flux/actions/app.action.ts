@@ -8,12 +8,13 @@ export const getAppConfig = async () => {
   try {
     useAppStore.getState().dispatch({ type: AppTypes.GET_CONF_FETCHING, payload: { loading: true } });
     const { config, error } = await appController.getBlogConfig()
-
     if (error) {
       throw error;
     }
 
-  } catch (error) {
+    useAppStore.getState().dispatch({ type: AppTypes.GET_CONF_DONE, payload: { config, loading: false } })
 
+  } catch (error) {
+    useAppStore.getState().dispatch({ type: AppTypes.GET_CONF_FETCHING, payload: { loading: false } });
   }
 }
