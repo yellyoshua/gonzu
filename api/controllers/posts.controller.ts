@@ -1,7 +1,7 @@
 import { PostsRepository } from "api/repositories/posts.repository"
 
 export class PostsController {
-  postsRepository: PostsRepository;
+  private postsRepository: PostsRepository;
 
   constructor() {
     this.postsRepository = new PostsRepository()

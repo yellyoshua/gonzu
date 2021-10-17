@@ -4,9 +4,9 @@ import { copyObject } from "@/utils/transforms";
 import { tags, readingTime } from '@tryghost/helpers'
 
 export class PostsRepository {
-  #blogApi: GhostAPI;
+  private blogApi: GhostAPI;
   constructor() {
-    this.#blogApi = new GhostContentAPI({
+    this.blogApi = new GhostContentAPI({
       key: process.env.NEXT_PUBLIC_BLOG_API_KEY || "",
       url: process.env.NEXT_PUBLIC_BLOG_API_URL || "",
       version: "v3"
@@ -33,13 +33,13 @@ export class PostsRepository {
   }
 
   async getPosts(fields?: string, filter?: string): Promise<Posts> {
-    const posts = await this.#blogApi.posts.browse({ limit: 20, filter, fields });
+    const posts = await this.blogApi.posts.browse({ limit: 20, filter, fields });
     const newPosts = this.#parsePosts(posts)
     return newPosts
   }
 
   async getPost(slug: string, fields?: string): Promise<Post> {
-    const post = await this.#blogApi.posts.read({ slug }, { fields });
+    const post = await this.blogApi.posts.read({ slug }, { fields });
     return this.#parsePost(post)
   }
 }

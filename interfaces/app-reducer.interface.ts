@@ -1,13 +1,12 @@
-import { AppStoreTypes } from "flux/types";
+import { Settings } from "@tryghost/content-api";
+import { AppTypes } from "flux/types";
 import { SocialLink, DispatchStore } from "./models";
-
-export interface AppReducer {
-  name: string,
+export interface AppReducer extends Settings {
   API_URL?: string,
   socialLinks: SocialLink[],
   copyright: string
 }
 
 export interface AppReducerActions {
-  dispatch: (args: DispatchStore<AppStoreTypes>) => void;
+  dispatch: (args: DispatchStore<AppTypes>) => void;
 }

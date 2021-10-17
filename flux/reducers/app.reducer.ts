@@ -1,8 +1,8 @@
 import { AppReducer } from "@/interfaces/app-reducer.interface";
 import { DispatchStore } from "@/interfaces/models";
-import { AppStoreTypes } from "../types";
+import { AppTypes } from "../types";
 
-export function app(state: AppReducer, options: DispatchStore<AppStoreTypes>): AppReducer {
+export function app(state: AppReducer, options: DispatchStore<AppTypes>): AppReducer {
   switch (options.type) {
     default:
       return { ...state }

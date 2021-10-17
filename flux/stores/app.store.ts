@@ -1,7 +1,7 @@
 import createStore from "zustand"
 import { AppReducer, AppReducerActions, DispatchStore } from "@/interfaces/index"
 import { APP_NAME, COPYRIGHT, SOCIAL_LINKS } from "@/config/app";
-import { AppStoreTypes } from "../types";
+import { AppTypes } from "../types";
 import * as reducers from "../reducers";
 
 interface FullReducer extends AppReducer, AppReducerActions { }
@@ -15,5 +15,5 @@ const initialState: AppReducer = {
 
 export const useAppStore = createStore<FullReducer>((updater, _) => ({
   ...initialState,
-  dispatch: (options: DispatchStore<AppStoreTypes>) => updater(state => reducers.app(state, options))
+  dispatch: (options: DispatchStore<AppTypes>) => updater(state => reducers.app(state, options))
 }))

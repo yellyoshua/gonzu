@@ -1,2 +1,5 @@
-export enum AppStoreTypes {
+export enum AppTypes {
+  GET_CONF_FETCHING = "GET_CONF_FETCHING",
+  GET_CONF_ERROR = "GET_CONF_ERROR",
+  GET_CONF_DONE = "GET_CONF_DONE",
 }
