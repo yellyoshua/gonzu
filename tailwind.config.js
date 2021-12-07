@@ -1,5 +1,14 @@
 module.exports = {
-  purge: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
+  purge: {
+    content: ["./pages/**/*.{js,ts,jsx,tsx}", "./src/**/*.{js,ts,jsx,tsx}"],
+    transform: {
+      mdx: (content) => mdx.sync(content),
+    },
+    options: {
+      keyframes: true, // Removing unused keyframes
+    },
+    preserveHtmlElements: false,
+  },
   darkMode: "class", // or 'media' or 'class'
   theme: {
     extend: {
@@ -12,8 +21,9 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
   corePlugins: {
     invert: true,
+    float: false,
   },
 };
