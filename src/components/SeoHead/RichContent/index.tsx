@@ -1,6 +1,6 @@
 interface RichContentProps {
   isPage?: boolean;
-  content: { title: string; description: string };
+  content: { title: string; description: string; backdrop: string };
 }
 
 export const RichContent = ({ isPage, content }: RichContentProps) => {
@@ -28,6 +28,12 @@ export const RichContent = ({ isPage, content }: RichContentProps) => {
     "@context": "http://schema.org",
     "@type": "NewsArticle",
     headline: content.title,
+    image: [content.backdrop],
+    author: {
+      "@type": "Person",
+      name: "UE GONZU",
+      url: "https://www.gonzu.edu.ec/assets/gonzu-header-banner.jpg",
+    },
     description: content.description,
     datePublished: new Date().toUTCString(),
   };

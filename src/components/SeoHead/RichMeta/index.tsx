@@ -1,4 +1,4 @@
-import { ApplicationName } from "@/app/constants";
+import { ApplicationCopyright, ApplicationName } from "@/app/constants";
 
 interface RichMetaProps {
   isPage?: boolean;
@@ -6,12 +6,18 @@ interface RichMetaProps {
     title: string;
     description: string;
     permaLink: string;
+    backdrop: string;
   };
 }
 
 export const RichMeta = ({ isPage, content }: RichMetaProps) => {
   return (
     <>
+      <meta
+        name="keywords"
+        content="GONZU,González Zumarraga,Zumarraga,Unidad Educativa"
+      />
+      <meta name="rights" content={ApplicationCopyright}></meta>
       <meta name="description" content={content.description} />
       <meta name="apple-mobile-web-app-title" content={ApplicationName} />
       <meta name="application-name" content={ApplicationName} />
@@ -22,6 +28,7 @@ export const RichMeta = ({ isPage, content }: RichMetaProps) => {
       <meta property="og:locale" content="es_ES" />
       <meta property="og:type" content={isPage ? "website" : "article"} />
       <meta property="og:url" content={content.permaLink} />
+      <meta property="og:image" content={content.backdrop} />
       <meta property="og:title" content={content.title} />
       <meta property="og:description" content={content.description} />
       <meta property="og:site_name" content={ApplicationName} />
@@ -34,6 +41,7 @@ export const RichMeta = ({ isPage, content }: RichMetaProps) => {
       <meta name="twitter:title" content={content.title} />
       <meta name="twitter:description" content={content.description} />
       <meta name="twitter:url" content={content.permaLink} />
+      <meta name="twitter:image" content={content.backdrop} />
     </>
   );
 };
