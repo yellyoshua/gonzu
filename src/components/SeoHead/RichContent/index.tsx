@@ -34,9 +34,14 @@ export const RichContent = ({ isPage, content }: RichContentProps) => {
 
   return (
     <>
-      <script type="application/ld+json">
-        {JSON.stringify(isPage ? richContentForPages : richContentForPosts)}
-      </script>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            isPage ? richContentForPages : richContentForPosts
+          ),
+        }}
+      />
     </>
   );
 };
