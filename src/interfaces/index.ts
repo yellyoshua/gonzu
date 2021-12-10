@@ -1,3 +1,5 @@
-export * from "./models";
-export * from "./app-reducer.interface";
-export * from "./theme-reducer.interface";
+export interface LinkUrl {
+  external?: boolean;
+  url: string;
+  label: string;
+}

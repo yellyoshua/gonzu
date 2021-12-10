@@ -1,9 +1,10 @@
-import { Layout } from "@/app/ui/index";
+import { Layout } from "@/app/ui/Layout";
+import { UnderMaintenance } from "@/app/ui/UnderMaintenance";
 
 export default function IndexPage() {
   return (
-    <Layout>
-      <div>hola</div>
+    <Layout seoProps={{ permaLink: "/" }}>
+      <UnderMaintenance />
     </Layout>
   );
 }
