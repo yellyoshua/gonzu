@@ -2,11 +2,17 @@
 import { FooterInformation } from "./FooterInformation";
 import { FooterLinks } from "./FooterLinks";
 
-interface FooterSectionsProps {}
+interface FooterSectionsProps extends React.ComponentProps<"div"> {}
 
-export const FooterSections = ({}: FooterSectionsProps) => {
+export const FooterSections = ({
+  className,
+  ...props
+}: FooterSectionsProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mx-3">
+    <div
+      className={`grid grid-cols-1 md:grid-cols-2 gap-12 mx-3 ${className}`}
+      {...props}
+    >
       <FooterInformation
         phone="(02) 601-590"
         email="comunicaciones@gonzu.edu.ec"

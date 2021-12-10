@@ -17,7 +17,7 @@ export const NavBar = ({ links }: NavBarProps) => {
               <a
                 href={url}
                 target="_blank"
-                className="font-medium font-arvo text-lg"
+                className="font-bold font-jost text-lg"
               >
                 <TextWithIcon
                   noMargin
@@ -30,7 +30,7 @@ export const NavBar = ({ links }: NavBarProps) => {
               </a>
             ) : (
               <Link href={url}>
-                <a href={url} className="font-medium font-arvo text-lg">
+                <a href={url} className="font-bold font-jost text-lg">
                   {label}
                 </a>
               </Link>

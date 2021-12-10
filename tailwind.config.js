@@ -13,8 +13,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        arvo: ["Arvo", "sans-serif"],
-        varela: ["Varela Round", "sans-serif"],
+        jost: ["Jost", "sans-serif"],
+        lato: ["Lato", "sans-serif"],
       },
     },
   },

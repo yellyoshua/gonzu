@@ -10,7 +10,7 @@ interface FooterLinksProps {
 
 export const FooterLinks = ({ links }: FooterLinksProps) => {
   return (
-    <section className="m-auto md:m-0">
+    <section className="w-4/5 m-auto md:w-full md:m-0">
       <h3 className="text-lg font-bold text-black">La institución | Enlaces</h3>
       <ul>
         {links.map((link) => {

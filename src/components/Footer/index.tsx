@@ -6,7 +6,7 @@ export function Footer() {
   return (
     <footer className="py-10 sm:my-10 bg-gray-200">
       <FooterSections />
-      <Copyright copyright={ApplicationCopyright} />
+      <Copyright className="mt-10" copyright={ApplicationCopyright} />
     </footer>
   );
 }
