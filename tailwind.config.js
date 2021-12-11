@@ -1,14 +1,5 @@
 module.exports = {
-  purge: {
-    content: ["./pages/**/*.{js,ts,jsx,tsx}", "./src/**/*.{js,ts,jsx,tsx}"],
-    transform: {
-      mdx: (content) => mdx.sync(content),
-    },
-    options: {
-      keyframes: true, // Removing unused keyframes
-    },
-    preserveHtmlElements: false,
-  },
+  content: ["./pages/**/*.{js,ts,jsx,tsx}", "./src/**/*.{js,ts,jsx,tsx}"],
   darkMode: "class", // or 'media' or 'class'
   theme: {
     extend: {
