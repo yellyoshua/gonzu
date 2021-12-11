@@ -1,9 +1,9 @@
 import { Layout } from "@/app/ui/Layout";
 import { UnderMaintenance } from "@/app/ui/UnderMaintenance";
 
-export default function IndexPage() {
+export default function HomePage() {
   return (
-    <Layout seoProps={{ permaLink: "/" }}>
+    <Layout seo={{ permaLink: "/" }}>
       <UnderMaintenance />
     </Layout>
   );

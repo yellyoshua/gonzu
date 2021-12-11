@@ -13,9 +13,9 @@ export const FooterLinks = ({ links }: FooterLinksProps) => {
     <section className="w-4/5 m-auto md:w-full md:m-0">
       <h3 className="text-lg font-bold text-black">La institución | Enlaces</h3>
       <ul>
-        {links.map((link) => {
+        {links.map((link, key) => {
           return (
-            <li>
+            <li key={`footer-link-${link.label}-${key}`}>
               {link.external ? (
                 <a href={link.url} target="_blank" className="text-black">
                   <TextWithIcon

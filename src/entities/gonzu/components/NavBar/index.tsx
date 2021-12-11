@@ -11,8 +11,11 @@ export const NavBar = ({ links }: NavBarProps) => {
   return (
     <section className="my-4 flex justify-center">
       <ul className="flex flex-wrap align-middle justify-center">
-        {links.map(({ label, url, external }) => (
-          <li className="mx-6 border-b-2 border-transparent hover:border-red-700">
+        {links.map(({ label, url, external }, key) => (
+          <li
+            key={`navbar-${label}-${key}`}
+            className="mx-6 border-b-2 border-transparent hover:border-red-700"
+          >
             {external ? (
               <a
                 href={url}
