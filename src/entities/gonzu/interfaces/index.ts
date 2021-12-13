@@ -6,6 +6,11 @@ export interface SocialLink {
   url: string;
 }
 
+export interface AcademicOffer {
+  title: string;
+  link: LinkUrl;
+}
+
 export interface Gonzu {
   socialLinks: SocialLink[];
 
@@ -14,6 +19,10 @@ export interface Gonzu {
   bannerLogo: string[];
   header: {
     links: LinkUrl[];
+  };
+  body: {
+    welcomeLinks: LinkUrl[];
+    academicOffers: AcademicOffer[];
   };
   footer: {
     information: {

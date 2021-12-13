@@ -28,6 +28,15 @@ const initialState: Gonzu = {
       },
     ],
   },
+  body: {
+    welcomeLinks: [
+      { label: "Dar un Tour", url: "/app/tour", disabled: true },
+      { label: "Nosotros", url: "/sobre-nosotros" },
+      { label: "Pastoral", url: "/pastoral" },
+      { label: "Inscripciones", url: "/app/inscripciones" },
+    ],
+    academicOffers: [],
+  },
   footer: {
     information: {
       phone: "(02) 601-590",

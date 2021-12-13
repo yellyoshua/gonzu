@@ -14,7 +14,7 @@ export const TextWithIcon = ({
   return (
     <div className={`flex items-center ${noMargin ?? "my-3"} max-w-xs`}>
       {icon}
-      <p className="text-black flex-1">{children}</p>
+      <p className="text-black flex-1 break-all">{children}</p>
     </div>
   );
 };
