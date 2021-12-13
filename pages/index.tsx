@@ -1,7 +1,10 @@
-import { Layout } from '@/ui/index'
+import { Layout } from "@/app/ui/Layout";
+import { HomeContent } from "@/app/entities/gonzu/ui/HomeContent";
 
-export default function IndexPage() {
-  return <Layout>
-    <div>hola</div>
-  </Layout>
+export default function HomePage() {
+  return (
+    <Layout seo={{ permaLink: "/" }}>
+      <HomeContent />
+    </Layout>
+  );
 }

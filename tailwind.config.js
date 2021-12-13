@@ -1,19 +1,20 @@
 module.exports = {
-  purge: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
+  content: ["./pages/**/*.{js,ts,jsx,tsx}", "./src/**/*.{js,ts,jsx,tsx}"],
   darkMode: "class", // or 'media' or 'class'
   theme: {
     extend: {
       fontFamily: {
-        arvo: ["Arvo", "sans-serif"],
-        varela: ["Varela Round", "sans-serif"],
+        jost: ["Jost", "sans-serif"],
+        lato: ["Lato", "sans-serif"],
       },
     },
   },
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
   corePlugins: {
     invert: true,
+    float: false,
   },
 };
