@@ -1,13 +1,21 @@
+import Link from "next/link";
 import { Layout } from "@/app/ui/Layout";
 
-function NotFoundPage() {
+export default function NotFoundPageProps() {
   return (
     <Layout seo={{ title: "Página no encontrada - 404", permaLink: "/" }}>
-      <p className="text-center text-4xl my-28 font-jost">
+      <h1 className="text-center text-4xl my-28 font-jost">
         P&aacute;gina no encontrada
-      </p>
+      </h1>
+      <div className="flex justify-center items-center">
+        <Link href="/">
+          <a href="/">
+            <button className="px-2 py-1 shadow-lg border-4 border-red-700  bg-red-700 hover:bg-white text-white hover:text-red-700 font-jost font-bold">
+              Ir al inicio
+            </button>
+          </a>
+        </Link>
+      </div>
     </Layout>
   );
 }
-
-export default NotFoundPage;
