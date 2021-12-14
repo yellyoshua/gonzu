@@ -365,6 +365,21 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@graphcms/rich-text-react-renderer@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@graphcms/rich-text-react-renderer/-/rich-text-react-renderer-0.4.0.tgz#a7c46cf4d39e2bc8e24cb8d65612495d503af166"
+  integrity sha512-pUI/apwuOypGxpM12c5SDqzUCqDA+BmQtx4X0XSz9wlWxkvKxseqpVOZkqvIDSPgNTa6EVBGacW420iRlB+qOA==
+  dependencies:
+    "@graphcms/rich-text-types" "^0.3.1"
+    escape-html "^1.0.3"
+
+"@graphcms/rich-text-types@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@graphcms/rich-text-types/-/rich-text-types-0.3.1.tgz#ee8cec326f42e710970f372b9fde2f70e34c5e9c"
+  integrity sha512-BCZ8ZombSXnGy9g83guTgqX9sezEUSijR1HhEaals3N70zZ3futZ0YfPdC7/DGQEH7itAJGf7HT+KjHBCsepPg==
+  dependencies:
+    tslib "^2.0.0"
+
 "@graphql-typed-document-node/core@^3.0.0":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.1.tgz#076d78ce99822258cf813ecc1e7fa460fa74d052"
@@ -2247,6 +2262,11 @@ escalade@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/escalade/-/escalade-3.1.1.tgz#d8cfdc7000965c5a0174b4a82eaa5c0552742e40"
   integrity sha512-k0er2gUkLf8O0zKJiAhmkTnJlTvINGv7ygDNPbeIsX/TJjGJZHuh9B2UxbsaEkmlEo9MfhrSzmhIlhRlI2GXnw==
+
+escape-html@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/escape-html/-/escape-html-1.0.3.tgz#0258eae4d3d0c0974de1c169188ef0051d1d1988"
+  integrity sha1-Aljq5NPQwJdN4cFpGI7wBR0dGYg=
 
 escape-string-regexp@^1.0.5:
   version "1.0.5"
@@ -5472,7 +5492,7 @@ tslib@^1.10.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2.1.0, tslib@^2.3.0:
+tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
   integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==

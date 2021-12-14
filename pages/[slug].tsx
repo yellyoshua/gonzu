@@ -1,16 +1,21 @@
 import { GetServerSideProps } from "next";
 import { Layout } from "@/app/ui/Layout";
 import { setUpCustomHeaders } from "@/app/utils/server.utils";
+import { PageContent } from "@/app/entities/pages/ui/PageContent";
+import { getPageBySlug } from "@/app/entities/pages/flux/pages.actions";
+import { Page } from "@/app/entities/pages/interfaces";
 
 interface PagesProps {
+  page: Page;
   permaLink: string;
-  title: string;
 }
 
-export default function Pages({ permaLink, title }: PagesProps) {
+export default function Pages({ permaLink, page }: PagesProps) {
+  const { title } = page;
+
   return (
     <Layout seo={{ permaLink, title }}>
-      <h1>{title}</h1>
+      <PageContent content={page} />
     </Layout>
   );
 }
@@ -19,10 +24,21 @@ export const getServerSideProps: GetServerSideProps<PagesProps> = async (
   ctx
 ) => {
   setUpCustomHeaders(ctx.res);
-  const permaLink = ctx.params?.slug;
+  const permaLink =
+    (Array.isArray(ctx.params?.slug)
+      ? ctx.params?.slug[0]
+      : ctx.params?.slug) ?? null;
 
-  return {
-    props: { permaLink, title: "Sample title" },
-    notFound: true,
-  };
+  if (permaLink) {
+    const page = await getPageBySlug(permaLink);
+
+    if (page) {
+      return {
+        props: { permaLink, page },
+        notFound: false,
+      };
+    }
+  }
+
+  return { notFound: true };
 };
