@@ -10,3 +10,17 @@ const initialState: PageStore = {
 export const usePageStore = createStore<PageStore>(
   devtools(() => initialState)
 );
+
+interface PageStoreProviderProps {
+  content: PageStore;
+  children: React.ReactNode;
+}
+
+export const PageStoreProvider = ({
+  content,
+  children,
+}: PageStoreProviderProps) => {
+  usePageStore.setState(content, true);
+
+  return <div>{children}</div>;
+};

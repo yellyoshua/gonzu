@@ -1,9 +1,4 @@
-import { ElementNode } from "@graphcms/rich-text-types";
-
-export interface RawRichText {
-  __typename: "RichText";
-  raw: { children: ElementNode[] };
-}
+import { RawRichText } from "@/app/interfaces";
 
 export interface Page {
   slug: string;

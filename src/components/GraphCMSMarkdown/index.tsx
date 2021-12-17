@@ -18,7 +18,8 @@ export const GraphCMSMarkdown = ({
           img: ({ src, altText, height, width }) => (
             <img
               {...{ src, altText, height, width }}
-              className="max-h-96 w-full h-full m-auto object-contain"
+              className="m-auto object-contain"
+              style={{ maxHeight: 600 }}
             />
           ),
         }}

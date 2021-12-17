@@ -1,12 +1,12 @@
 import { GraphCMSMarkdown } from "@/app/components/GraphCMSMarkdown";
-import { Page, RawRichText } from "../../interfaces";
+import { RawRichText } from "@/app/interfaces";
+import { usePageStore } from "../../flux/pages.store";
 
-interface PageContentProps {
-  content: Page;
-}
+interface PageContentProps {}
 
-export const PageContent = ({ content }: PageContentProps) => {
-  const safeMarkdownContent = content.content! as RawRichText;
+export const PageContent = ({}: PageContentProps) => {
+  const page = usePageStore((state) => state.page);
+  const safeMarkdownContent = page?.content! as RawRichText;
 
   return (
     <div>

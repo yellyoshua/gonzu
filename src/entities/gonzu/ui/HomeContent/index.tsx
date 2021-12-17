@@ -10,7 +10,7 @@ export const HomeContent = ({}: HomeContentProps) => {
       <Welcome
         buttonsLink={[
           { label: "Dar un Tour", url: "/app/tour", disabled: true },
-          { label: "Nosotros", url: "/sobre-nosotros" },
+          { label: "Nosotros", url: "/nosotros" },
           { label: "Pastoral", url: "/pastoral" },
           { label: "Inscripciones", url: "/app/inscripciones" },
         ]}
