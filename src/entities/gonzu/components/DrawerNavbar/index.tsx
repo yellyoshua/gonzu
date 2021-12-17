@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useToggle } from "react-use";
+import { useLockBodyScroll, useToggle } from "react-use";
 import ExternalLinkIcon from "@heroicons/react/solid/ExternalLinkIcon";
 import { TextWithIcon } from "@/app/components/commons/TextWithIcon";
 import { LinkUrl } from "@/app/interfaces";
@@ -16,6 +16,8 @@ export const DrawerNavbar = ({
   copyright,
 }: DrawerNavbarProps) => {
   const [isOpen, toggleDrawer] = useToggle(false);
+
+  useLockBodyScroll(isOpen);
 
   return (
     <nav className="flex fixed w-full items-center justify-between px-6 h-20 bg-white text-gray-700 border-b border-gray-200 z-10">
