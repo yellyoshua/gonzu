@@ -17,8 +17,6 @@ export const GonzuHeader = () => {
     shallow
   );
 
-  console.log({ isMDBreakpoint });
-
   return (
     <header className={`w-full relative ${isMDBreakpoint ? "h-full" : "h-20"}`}>
       {isMDBreakpoint ? (
