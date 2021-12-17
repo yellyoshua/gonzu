@@ -17,7 +17,8 @@ export const GraphCMSMarkdown = ({
         renderers={{
           img: ({ src, altText, height, width }) => (
             <img
-              {...{ src, altText, height, width }}
+              {...{ src, height, width }}
+              alt={altText}
               className="m-auto object-contain"
               style={{ maxHeight: 600 }}
             />
