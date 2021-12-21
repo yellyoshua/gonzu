@@ -15,7 +15,10 @@ export const GET_PAGE_BY_SLUG = gql`
       raw
     }
     backdrop {
+      height
+      width
       url
+      fileName
     }
   }
 `;
