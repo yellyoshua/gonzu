@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 interface TextWithIconProps {
   icon: ReactNode;
-  children: string;
+  children: string | ReactNode;
   noMargin?: boolean;
   right?: boolean;
 }
