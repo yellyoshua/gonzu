@@ -3,7 +3,7 @@ import { Layout } from "@/app/ui/Layout";
 import { setUpCustomHeaders } from "@/app/utils/server.utils";
 import { PageContent } from "@/app/entities/pages/ui/PageContent";
 import { getPageBySlug } from "@/app/entities/pages/flux/pages.actions";
-import { PageStoreProvider } from "@/app/entities/pages/flux/pages.store";
+import { usePageStore } from "@/app/entities/pages/flux/pages.store";
 import { Page } from "@/app/entities/pages/interfaces";
 import { PagesRecommendation } from "@/app/entities/pages/components/PagesRecommendation";
 
@@ -13,14 +13,14 @@ interface PagesProps {
 }
 
 export default function Pages({ permaLink, page }: PagesProps) {
-  const { title } = page;
+  usePageStore.setState({ loading: false, page, recomendations: [] }, true);
+
+  const { title } = usePageStore.getState().page!;
 
   return (
     <Layout seo={{ permaLink, title }}>
-      <PageStoreProvider content={{ loading: false, page, recomendations: [] }}>
-        <PageContent />
-        <PagesRecommendation />
-      </PageStoreProvider>
+      <PageContent />
+      <PagesRecommendation />
     </Layout>
   );
 }

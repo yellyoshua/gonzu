@@ -59,17 +59,3 @@ const initialState: Gonzu = {
 };
 
 export const useGonzuStore = createStore<Gonzu>(devtools(() => initialState));
-
-interface GonzuStoreProviderProps {
-  content: Gonzu | null;
-  children: React.ReactNode;
-}
-
-export const GonzuStoreProvider = ({
-  content,
-  children,
-}: GonzuStoreProviderProps) => {
-  content && useGonzuStore.setState(content);
-
-  return <div>{children}</div>;
-};
