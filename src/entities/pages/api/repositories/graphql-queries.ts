@@ -11,6 +11,9 @@ export const GET_PAGE_BY_SLUG = gql`
     id
     slug
     title
+    locale
+    createdAt
+    updatedAt
     content {
       raw
     }
