@@ -15,4 +15,11 @@ export class PageRepository {
       variables: { slug },
     });
   }
+
+  getPagesRecomendations(pageExcludeSlug: string) {
+    return this.api.query({
+      query: query.GET_PAGES_RECOMENDATIONS,
+      variables: { slug: pageExcludeSlug },
+    });
+  }
 }

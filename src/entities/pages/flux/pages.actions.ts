@@ -16,3 +16,17 @@ export const getPageBySlug = async (slug: string) => {
 export const setPageInToStore = (page: Page) => {
   usePageStore.setState({ page, loading: false });
 };
+
+export const getPagesRecomendationsInStore = async (exeptPageSlug?: string) => {
+  try {
+    const pageExclude = exeptPageSlug ?? usePageStore.getState().page?.slug!;
+
+    const recomendations = await pagesController.getPagesRecomendations(
+      pageExclude
+    );
+
+    usePageStore.setState({ recomendations });
+  } catch (error) {
+    usePageStore.setState({ recomendations: [] });
+  }
+};
