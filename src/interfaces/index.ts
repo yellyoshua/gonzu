@@ -11,3 +11,10 @@ export interface RawRichText {
   __typename: "RichText";
   raw: { children: ElementNode[] };
 }
+
+export interface Asset {
+  height: number;
+  width: number;
+  url: string;
+  fileName: string;
+}
