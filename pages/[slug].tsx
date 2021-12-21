@@ -5,6 +5,7 @@ import { PageContent } from "@/app/entities/pages/ui/PageContent";
 import { getPageBySlug } from "@/app/entities/pages/flux/pages.actions";
 import { PageStoreProvider } from "@/app/entities/pages/flux/pages.store";
 import { Page } from "@/app/entities/pages/interfaces";
+import { PagesRecommendation } from "@/app/entities/pages/components/PagesRecommendation";
 
 interface PagesProps {
   page: Page;
@@ -16,8 +17,9 @@ export default function Pages({ permaLink, page }: PagesProps) {
 
   return (
     <Layout seo={{ permaLink, title }}>
-      <PageStoreProvider content={{ loading: false, page }}>
+      <PageStoreProvider content={{ loading: false, page, recomendations: [] }}>
         <PageContent />
+        <PagesRecommendation />
       </PageStoreProvider>
     </Layout>
   );

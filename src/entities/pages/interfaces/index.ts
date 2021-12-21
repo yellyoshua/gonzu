@@ -1,4 +1,4 @@
-import { RawRichText } from "@/app/interfaces";
+import { LinkUrl, RawRichText } from "@/app/interfaces";
 
 export interface Page {
   slug: string;
@@ -7,6 +7,7 @@ export interface Page {
 }
 
 export interface PageStore {
+  recomendations: LinkUrl[];
   page: Page | null;
   loading: boolean;
 }
