@@ -1,18 +1,36 @@
 import shallow from "zustand/shallow";
+import { useMedia } from "react-use";
 import { useGonzuStore } from "@/app/entities/gonzu/flux/gonzu.store";
 import { LogoBanner } from "@/app/entities/gonzu/components/LogoBanner";
 import { NavBar } from "@/app/entities/gonzu/components/NavBar";
+import { DrawerNavbar } from "@/app/entities/gonzu/components/DrawerNavbar";
 
 export const GonzuHeader = () => {
-  const { links, logosBanner } = useGonzuStore(
-    (state) => ({ links: state.header.links, logosBanner: state.bannerLogo }),
+  const isMDBreakpoint = useMedia("(min-width: 768px)", true);
+
+  const { links, logosBanner, copyright } = useGonzuStore(
+    (state) => ({
+      links: state.header.links,
+      logosBanner: state.bannerLogo,
+      copyright: state.copyright,
+    }),
     shallow
   );
 
   return (
-    <header className="w-full my-4">
-      <LogoBanner logoBanner={logosBanner} />
-      <NavBar links={links} />
+    <header suppressHydrationWarning className="w-full relative">
+      {isMDBreakpoint ? (
+        <NavBar
+          logoElement={<LogoBanner logoBanner={logosBanner} />}
+          links={links}
+        />
+      ) : (
+        <DrawerNavbar
+          links={links}
+          copyright={copyright}
+          logoElement={<LogoBanner logoBanner={logosBanner} className="h-16" />}
+        />
+      )}
     </header>
   );
 };

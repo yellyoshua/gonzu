@@ -1,14 +1,14 @@
 import Link from "next/link";
 
-interface LogoBannerProps {
+interface LogoBannerProps extends React.ComponentProps<"section"> {
   logoBanner: string[];
 }
 
-export const LogoBanner = ({ logoBanner }: LogoBannerProps) => {
+export const LogoBanner = ({ logoBanner, ...props }: LogoBannerProps) => {
   const logosBannerMajor2 = logoBanner.length >= 2;
 
   return (
-    <section className="h-20 my-2">
+    <section className="h-20 my-2" {...props}>
       <Link href="/">
         <a href="/">
           <picture>
@@ -29,7 +29,7 @@ export const LogoBanner = ({ logoBanner }: LogoBannerProps) => {
                   ? logoBanner[logoBanner.length - 1]
                   : logoBanner[0]
               }
-              className="h-full w-auto m-auto"
+              className="h-full w-auto m-auto object-contain"
               alt="banner-logo"
             />
           </picture>

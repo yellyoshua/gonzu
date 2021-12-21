@@ -31,7 +31,7 @@ const initialState: Gonzu = {
   body: {
     welcomeLinks: [
       { label: "Dar un Tour", url: "/app/tour", disabled: true },
-      { label: "Nosotros", url: "/sobre-nosotros" },
+      { label: "Nosotros", url: "/nosotros" },
       { label: "Pastoral", url: "/pastoral" },
       { label: "Inscripciones", url: "/app/inscripciones" },
     ],
@@ -59,3 +59,17 @@ const initialState: Gonzu = {
 };
 
 export const useGonzuStore = createStore<Gonzu>(devtools(() => initialState));
+
+interface GonzuStoreProviderProps {
+  content: Gonzu | null;
+  children: React.ReactNode;
+}
+
+export const GonzuStoreProvider = ({
+  content,
+  children,
+}: GonzuStoreProviderProps) => {
+  content && useGonzuStore.setState(content);
+
+  return <div>{children}</div>;
+};
