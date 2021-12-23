@@ -12,6 +12,7 @@
   "dependencies": {
     "@apollo/client": "^3.4.16",
     "@graphcms/rich-text-react-renderer": "^0.4.0",
+    "@headlessui/react": "^1.4.2",
     "@heroicons/react": "^1.0.5",
     "canvas-confetti": "^1.4.0",
     "dayjs": "^1.10.7",
