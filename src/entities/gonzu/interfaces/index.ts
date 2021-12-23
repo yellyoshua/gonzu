@@ -11,6 +11,19 @@ export interface AcademicOffer {
   link: LinkUrl;
 }
 
+export enum CelebrationsTemplates {
+  CHRISTMAS = "christmas",
+}
+
+export interface Celebration {
+  template: CelebrationsTemplates;
+}
+
+export interface SiteConfig {
+  celebration: Celebration | null;
+  darkMode: boolean;
+}
+
 export interface Gonzu {
   socialLinks: SocialLink[];
 
