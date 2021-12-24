@@ -118,33 +118,29 @@ export const useConfetti = ({ ...confettiOptions }: UseConfettiProps) => {
 
   const snow = (timeOut: number = oneHour) => {
     if (confettiRef.current) {
-      const interval = setInterval(
-        (confettiCurrent: CreateTypes) => {
-          confettiCurrent({
-            particleCount: 1,
-            spread: 5,
-            startVelocity: 0,
-            ticks: 200,
-            gravity: 0.3,
-            origin: {
-              x: Math.random(),
-              y: Math.random() * 0.999 - 0.2,
-            },
-            colors: ["#ffffff"],
-            shapes: ["circle"],
-            scalar: randomInRange(0.4, 1),
-          });
-        },
-        1500,
-        confettiRef.current
-      );
+      var duration = timeOut;
+      var end = Date.now() + duration;
 
-      christmasTimeout.current = setTimeout(() => {
-        clearInterval(interval);
-        resetConfetti();
-        console.log("timeout");
-        christmasTimeout.current = null;
-      }, timeOut);
+      (function frame(confettiCurrent: CreateTypes) {
+        confettiCurrent({
+          particleCount: 1,
+          startVelocity: 0,
+          ticks: 200,
+          gravity: 0.3,
+          origin: {
+            x: Math.random(),
+            y: Math.random() * 0.999 - 0.2,
+          },
+          colors: ["#ffffff"],
+          shapes: ["circle"],
+          scalar: randomInRange(0.4, 1),
+        });
+
+        // keep going until we are out of time
+        if (Date.now() < end) {
+          window.requestAnimationFrame(() => frame(confettiCurrent));
+        }
+      })(confettiRef.current);
     }
   };
 
