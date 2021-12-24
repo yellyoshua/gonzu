@@ -18,12 +18,29 @@ export const useConfetti = ({ ...confettiOptions }: UseConfettiProps) => {
   const realisticTimeout = useRef<NodeJS.Timeout | null>(null);
   const fireworkTimeout = useRef<NodeJS.Timeout | null>(null);
 
+  const snowRequestAnimationFrameKey = useRef<number | null>(null);
+
+  const unmountTimeouts = () => {
+    realisticTimeout.current && clearTimeout(realisticTimeout.current);
+    fireworkTimeout.current && clearTimeout(fireworkTimeout.current);
+
+    realisticTimeout.current = null;
+    fireworkTimeout.current = null;
+  };
+
+  const cancelAnimationsFrame = () => {
+    snowRequestAnimationFrameKey.current &&
+      window.cancelAnimationFrame(snowRequestAnimationFrameKey.current);
+  };
+
   const resetConfetti = (instant?: boolean) => {
-    if (instant) {
-      confettiRef.current?.reset();
-    } else {
-      setTimeout(() => confettiRef.current?.reset(), 2000);
-    }
+    const resetAll = () => {
+      unmountTimeouts();
+      cancelAnimationsFrame();
+      confettiRef.current && confettiRef.current.reset();
+    };
+
+    instant ? resetAll() : setTimeout(() => resetAll(), 2000);
   };
 
   const fireworks = (timeOut: number = 5000) => {
@@ -118,7 +135,7 @@ export const useConfetti = ({ ...confettiOptions }: UseConfettiProps) => {
       var duration = timeOut;
       var end = Date.now() + duration;
 
-      (function frame(confettiCurrent: CreateTypes) {
+      (function frame(confettiCurrent: CreateTypes, reset: () => void) {
         confettiCurrent({
           particleCount: 1,
           startVelocity: 0,
@@ -135,11 +152,13 @@ export const useConfetti = ({ ...confettiOptions }: UseConfettiProps) => {
 
         // keep going until we are out of time
         if (Date.now() < end) {
-          window.requestAnimationFrame(() => frame(confettiCurrent));
+          snowRequestAnimationFrameKey.current = window.requestAnimationFrame(
+            () => frame(confettiCurrent, reset)
+          );
+        } else {
+          reset();
         }
-      })(confettiRef.current);
-
-      resetConfetti(true);
+      })(confettiRef.current, () => resetConfetti(true));
     }
   };
 
@@ -152,13 +171,7 @@ export const useConfetti = ({ ...confettiOptions }: UseConfettiProps) => {
     }
 
     return () => {
-      confettiRef.current && confettiRef.current.reset();
-
-      realisticTimeout.current && clearTimeout(realisticTimeout.current);
-      fireworkTimeout.current && clearTimeout(fireworkTimeout.current);
-
-      realisticTimeout.current = null;
-      fireworkTimeout.current = null;
+      resetConfetti(true);
     };
   }, []);
 
