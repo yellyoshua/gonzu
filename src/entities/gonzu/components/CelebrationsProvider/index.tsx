@@ -1,10 +1,13 @@
 import { useEffect } from "react";
-import { useIdle, usePageLeave } from "react-use";
-import { useConfetti } from "@/app/hooks/useConfetti";
+import { useIdle } from "react-use";
 import { useSiteConfigStore } from "../../flux/siteConfig.store";
 import { Celebrations } from "../../interfaces";
+import { SnowCelebration } from "./SnowCelebration";
+import { FireworksCelebration } from "./FireworksCelebration";
 
 const fiveMinutesIdleTimeout = 300000;
+const fiveMinutes = 300000;
+const nineSeconds = 9000;
 
 interface CelebrationsProviderProps {}
 
@@ -15,35 +18,23 @@ export const CelebrationsProvider = ({}: CelebrationsProviderProps) => {
   );
   const isUserIdle = useIdle(fiveMinutesIdleTimeout);
 
-  const { canvasConfettiRef, confetti, resetConfetti } = useConfetti({
-    resize: true,
-  });
-
-  usePageLeave(() => resetConfetti(true));
-
   useEffect(() => {
-    // TODO: performance re-renders
-    if (!isUserIdle) {
-      if (!showInauguralConfetti) {
-        // remove "!" to not show fireworks on each reload
-        confetti.fireworks(9000);
-        useSiteConfigStore.setState({ showInauguralConfetti: false });
-      }
-
-      if (celebration === Celebrations.CHRISTMAS) {
-        confetti.snow();
-      }
-    }
+    const timeout = setTimeout(() => {
+      useSiteConfigStore.setState({ showInauguralConfetti: false });
+    }, fiveMinutes);
 
     return () => {
-      resetConfetti(true);
+      clearTimeout(timeout);
     };
-  }, [celebration, isUserIdle]);
+  }, []);
 
   return (
-    <canvas
-      ref={canvasConfettiRef}
-      className="fixed top-0 bottom-0 pointer-events-none h-screen w-full"
-    />
+    <>
+      <SnowCelebration execute timeOut={fiveMinutes} />
+      <FireworksCelebration
+        execute={!isUserIdle && !showInauguralConfetti}
+        timeOut={nineSeconds}
+      />
+    </>
   );
 };
