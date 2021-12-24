@@ -5,9 +5,7 @@ import { Songs } from "../../interfaces";
 
 export const SongsProvider = () => {
   const song = useSiteConfigStore((state) => state.song);
-  const [audio, , controls, audioRef] = useAudio({
-    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-  });
+  const [audio, , controls, audioRef] = useAudio({ src: "" });
 
   const changeCurrentAudio = (srcAudio: string) => {
     audioRef.current && (audioRef.current.src = srcAudio);
@@ -20,6 +18,7 @@ export const SongsProvider = () => {
     }
 
     if (song === Songs.CHRISTMAS) {
+      // pending to upload or resize the file size
       changeCurrentAudio("/content/mp3/soft_christmas_song_8_hours.m4a");
       controls.volume(0.01);
       controls.play();
