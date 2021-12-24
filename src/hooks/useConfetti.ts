@@ -138,6 +138,8 @@ export const useConfetti = ({ ...confettiOptions }: UseConfettiProps) => {
           window.requestAnimationFrame(() => frame(confettiCurrent));
         }
       })(confettiRef.current);
+
+      resetConfetti(true);
     }
   };
 
