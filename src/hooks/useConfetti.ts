@@ -2,8 +2,6 @@ import { useEffect, useRef } from "react";
 import canvascConfetti from "canvas-confetti";
 import type { CreateTypes, GlobalOptions } from "canvas-confetti";
 
-const christmasColors = ["#ffff", "#ff0000", "#ffeb3b"];
-
 const oneHour = 3600000;
 
 function randomInRange(min: number, max: number) {
@@ -17,7 +15,6 @@ export const useConfetti = ({ ...confettiOptions }: UseConfettiProps) => {
   const canvasConfettiRef = useRef<HTMLCanvasElement | null>(null);
   const confettiRef = useRef<CreateTypes | null>(null);
 
-  const christmasTimeout = useRef<NodeJS.Timeout | null>(null);
   const realisticTimeout = useRef<NodeJS.Timeout | null>(null);
   const fireworkTimeout = useRef<NodeJS.Timeout | null>(null);
 
@@ -144,43 +141,6 @@ export const useConfetti = ({ ...confettiOptions }: UseConfettiProps) => {
     }
   };
 
-  const christmas = (timeOut: number = oneHour) => {
-    if (confettiRef.current) {
-      let skew = 1;
-
-      const interval = setInterval(
-        (confettiCurrent: CreateTypes) => {
-          skew = Math.max(0.8, skew - 0.001);
-
-          confettiCurrent({
-            particleCount: 1,
-            spread: 5,
-            startVelocity: 0,
-            ticks: 200,
-            origin: {
-              x: Math.random(),
-              y: Math.random() * skew - 0.2,
-            },
-            colors: christmasColors,
-            shapes: ["circle"],
-            gravity: randomInRange(0.4, 0.6),
-            scalar: randomInRange(0.4, 1),
-            drift: randomInRange(-0.4, 0.4),
-          });
-        },
-        1500,
-        confettiRef.current
-      );
-
-      christmasTimeout.current = setTimeout(() => {
-        clearInterval(interval);
-        resetConfetti();
-        console.log("timeout");
-        christmasTimeout.current = null;
-      }, timeOut);
-    }
-  };
-
   useEffect(() => {
     if (canvasConfettiRef.current && !confettiRef.current) {
       confettiRef.current = canvascConfetti.create(
@@ -192,11 +152,9 @@ export const useConfetti = ({ ...confettiOptions }: UseConfettiProps) => {
     return () => {
       confettiRef.current && confettiRef.current.reset();
 
-      christmasTimeout.current && clearTimeout(christmasTimeout.current);
       realisticTimeout.current && clearTimeout(realisticTimeout.current);
       fireworkTimeout.current && clearTimeout(fireworkTimeout.current);
 
-      christmasTimeout.current = null;
       realisticTimeout.current = null;
       fireworkTimeout.current = null;
     };
@@ -205,6 +163,6 @@ export const useConfetti = ({ ...confettiOptions }: UseConfettiProps) => {
   return {
     canvasConfettiRef,
     resetConfetti,
-    confetti: { christmas, snow, realistic, fireworks },
+    confetti: { snow, realistic, fireworks },
   };
 };
