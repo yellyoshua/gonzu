@@ -118,10 +118,6 @@ export const useConfetti = ({ ...confettiOptions }: UseConfettiProps) => {
 
   const snow = (timeOut: number = oneHour) => {
     if (confettiRef.current) {
-      function randomInRange(min: number, max: number) {
-        return Math.random() * (max - min) + min;
-      }
-
       const interval = setInterval(
         (confettiCurrent: CreateTypes) => {
           confettiCurrent({
