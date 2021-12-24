@@ -30,9 +30,13 @@ export const CelebrationsProvider = ({}: CelebrationsProviderProps) => {
 
   return (
     <>
-      <SnowCelebration execute timeOut={fiveMinutes} />
+      <SnowCelebration
+        execute={!isUserIdle && celebration === Celebrations.CHRISTMAS}
+        timeOut={fiveMinutes}
+      />
       <FireworksCelebration
         execute={!isUserIdle && !showInauguralConfetti}
+        // remove "!" from "showInauguralConfetti" for not execute on each reload
         timeOut={nineSeconds}
       />
     </>
