@@ -11,16 +11,20 @@ export interface AcademicOffer {
   link: LinkUrl;
 }
 
-export enum CelebrationsTemplates {
+export enum Celebrations {
+  NONE = "none",
   CHRISTMAS = "christmas",
 }
 
-export interface Celebration {
-  template: CelebrationsTemplates;
+export enum Songs {
+  NONE = "none",
+  CHRISTMAS = "christmas",
 }
 
 export interface SiteConfig {
-  celebration: Celebration | null;
+  showInauguralConfetti: boolean;
+  song: Songs;
+  celebration: Celebrations;
   darkMode: boolean;
 }
 

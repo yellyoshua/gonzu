@@ -1,9 +1,11 @@
 import createStore from "zustand";
 import { devtools, persist } from "zustand/middleware";
-import { SiteConfig } from "../interfaces";
+import { Celebrations, SiteConfig, Songs } from "../interfaces";
 
 const initialState: SiteConfig = {
-  celebration: null,
+  showInauguralConfetti: true,
+  song: Songs.NONE,
+  celebration: Celebrations.NONE,
   darkMode: false,
 };
 
