@@ -5,23 +5,54 @@ import { Songs } from "../../interfaces";
 
 export const SongsProvider = () => {
   const song = useSiteConfigStore((state) => state.song);
-  const [audio, , controls, audioRef] = useAudio({ src: "" });
+  const [audio, stats, controls, audioRef] = useAudio({ src: "" });
 
-  const changeCurrentAudio = (srcAudio: string) => {
-    audioRef.current && (audioRef.current.src = srcAudio);
+  const changeCurrentAudio = (srcAudio: string | null) => {
+    audioRef.current && (audioRef.current.src = srcAudio ?? "");
+
+    if (srcAudio) {
+      controls.volume(0.01);
+      controls.play();
+    } else {
+      controls.pause();
+    }
+  };
+
+  const replayCurrentAudio = () => {
+    controls.volume(0.01);
+    controls.seek(0);
+    controls.play();
   };
 
   useEffect(() => {
+    if (song !== Songs.NONE && stats.paused) {
+      if (stats.time === stats.duration) {
+        replayCurrentAudio();
+      }
+    }
+  }, [stats.paused, song]);
+
+  useEffect(() => {
     if (song === Songs.NONE) {
-      changeCurrentAudio("");
-      controls.pause();
+      changeCurrentAudio(null);
     }
 
     if (song === Songs.CHRISTMAS) {
-      // pending to upload or resize the file size
-      changeCurrentAudio("/content/mp3/soft_christmas_song_8_hours.m4a");
-      controls.volume(0.01);
-      controls.play();
+      changeCurrentAudio(
+        "https://cdn2.melodyloops.com/mp3/preview-xmas-jazz-trio.mp3"
+      );
+    }
+
+    if (song === Songs.STUDYING) {
+      changeCurrentAudio(
+        "https://cdn2.melodyloops.com/mp3/preview-inner-calm.mp3"
+      );
+    }
+
+    if (song === Songs.SPIRITUAL) {
+      changeCurrentAudio(
+        "https://cdn2.melodyloops.com/mp3/preview-spiritual-highway.mp3"
+      );
     }
 
     return () => {
