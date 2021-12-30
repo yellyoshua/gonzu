@@ -20,9 +20,13 @@ export const DrawerNavbar = ({
   useLockBodyScroll(isOpen);
 
   return (
-    <nav className="flex sticky top-0 w-full items-center justify-between px-6 h-20 bg-white text-gray-700 border-b border-gray-200 z-10">
+    <nav className="flex sticky top-0 w-full items-center justify-between px-6 bg-white border-b border-b-gray-200 z-10">
       <div className="flex items-center w-full">
-        <button className="mr-2" aria-label="Open Menu" onClick={toggleDrawer}>
+        <button
+          className="mr-2 text-darkPrimary"
+          aria-label="Open Menu"
+          onClick={toggleDrawer}
+        >
           <svg
             fill="none"
             stroke="currentColor"
@@ -48,11 +52,11 @@ export const DrawerNavbar = ({
       )}
 
       <aside
-        className={`flex flex-col transform top-0 left-0 w-72 bg-white fixed h-full overflow-auto ease-in-out transition-all duration-300 z-30 ${
+        className={`flex flex-col transform top-0 left-0 w-72 bg-white dark:bg-darkPrimaryBold fixed h-full overflow-auto ease-in-out transition-all duration-300 z-30 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <span className="flex w-full items-center p-4 border-b">
+        <span className="flex w-full items-center p-4 border-b bg-white">
           {logoElement}
         </span>
 
@@ -63,15 +67,17 @@ export const DrawerNavbar = ({
               className="flex items-center px-2 py-4 mx-6 cursor-pointer border-b-2 border-transparent hover:border-red-700"
             >
               {external ? (
-                <a
-                  href={url}
-                  target="_blank"
-                  className="font-bold font-jost text-lg text-black"
-                >
+                <a href={url} target="_blank">
                   <TextWithIcon
                     noMargin
                     right
-                    icon={<ExternalLinkIcon width={20} className="ml-3" />}
+                    className="text-black dark:text-white font-bold font-jost text-lg"
+                    icon={
+                      <ExternalLinkIcon
+                        width={20}
+                        className="ml-3 text-black dark:text-white"
+                      />
+                    }
                   >
                     {label}
                   </TextWithIcon>
@@ -80,7 +86,7 @@ export const DrawerNavbar = ({
                 <Link href={url}>
                   <a
                     href={url}
-                    className="font-bold text-black font-jost text-lg"
+                    className="font-bold text-black dark:text-white font-jost text-lg"
                   >
                     {label}
                   </a>

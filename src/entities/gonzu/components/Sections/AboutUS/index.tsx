@@ -6,8 +6,10 @@ export const AboutUS = () => {
       </h2>
       <div className="flex flex-col lg:flex-row content-center justify-center gap-6 my-6">
         <section className="flex-1 m-auto order-2 lg:order-1">
-          <h2 className="font-jost font-bold text-xl">La institución</h2>
-          <p className="font-jost text-lg my-3 leading-relaxed">
+          <h2 className="font-jost font-bold text-xl text-darkPrimaryBold dark:text-darkTextBold">
+            La institución
+          </h2>
+          <p className="font-jost text-lg my-3 leading-relaxed text-darkPrimaryBold dark:text-darkTextParagraph">
             La{" "}
             <strong className="text-red-700">
               Unidad Educativa Cardenal Gonzáles Zumarraga
@@ -16,7 +18,7 @@ export const AboutUS = () => {
             institución que forma seres humanos integrales, líderes y con
             principios católicos que promueven una misión social.
           </p>
-          <p className="font-jost text-lg my-3 leading-relaxed">
+          <p className="font-jost text-lg my-3 leading-relaxed text-darkPrimaryBold dark:text-darkTextParagraph">
             Nuestra institución cuenta con instalaciones desde Preparatoria
             hasta Tercero de Bachillerato, la innovación curricular expresada
             como la integración de áreas de aprendizaje, es un concepto práctico
@@ -41,8 +43,10 @@ export const AboutUS = () => {
           />
         </section>
         <section className="flex-1 m-auto order-2 lg:order-2">
-          <h2 className="font-jost font-bold text-xl">¿Por qué Gonzu?</h2>
-          <p className="font-jost text-lg my-3 leading-relaxed">
+          <h2 className="font-jost font-bold text-xl text-darkPrimaryBold dark:text-darkTextBold">
+            ¿Por qué Gonzu?
+          </h2>
+          <p className="font-jost text-lg my-3 leading-relaxed text-darkPrimaryBold dark:text-darkTextParagraph">
             <strong className="text-red-700">GONZU</strong> es la abreviación de{" "}
             <strong className="text-red-700">
               Unidad Educativa “Cardenal González Zumárraga”
@@ -54,7 +58,7 @@ export const AboutUS = () => {
             </strong>{" "}
             quien realizó una labor incansable en su vida sacerdotal.
           </p>
-          <p className="font-jost text-lg my-3 leading-relaxed">
+          <p className="font-jost text-lg my-3 leading-relaxed text-darkPrimaryBold dark:text-darkTextParagraph">
             Amor cariño a la institución y el deseo de distinción motivan
             siempre a emplear este apelativo para dirigirse al templo donde los
             jóvenes comparten la mitad de su tiempo durante la vida estudiantil.

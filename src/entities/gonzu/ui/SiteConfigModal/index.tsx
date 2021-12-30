@@ -19,15 +19,15 @@ export const SiteConfigModal = ({}: SiteConfigModalProps) => {
 
   const renderContent = () => (
     <div className="w-full sm:mt-5">
-      <p className="my-2 font-jost font-bold text-sm text-black">
+      <p className="my-2 font-jost font-bold text-sm text-black dark:text-white">
         Celebraci&oacute;n de fondo:
       </p>
       <CelebrationsRadioPicker />
-      <p className="my-2 font-jost font-bold text-sm text-black">
+      <p className="my-2 font-jost font-bold text-sm text-black dark:text-white">
         M&uacute;sica de fondo:
       </p>
       <SongsRadioPicker />
-      <p className="my-2 font-jost font-bold text-sm text-black">
+      <p className="my-2 font-jost font-bold text-sm text-black dark:text-white">
         Modo oscuro:
       </p>
       <DarkModeSwitch />

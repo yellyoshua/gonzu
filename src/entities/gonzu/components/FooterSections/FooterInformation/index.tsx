@@ -23,16 +23,35 @@ export const FooterInformation = ({
       />
 
       <TextWithIcon
-        icon={<LocationMarkerIcon width={20} className="text-black mr-3" />}
+        icon={
+          <LocationMarkerIcon
+            width={20}
+            className="text-darkPrimaryBold dark:text-darkTextParagraph mr-3"
+          />
+        }
       >
         {direction}
       </TextWithIcon>
 
-      <TextWithIcon icon={<PhoneIcon width={20} className="text-black mr-3" />}>
+      <TextWithIcon
+        icon={
+          <PhoneIcon
+            width={20}
+            className="text-darkPrimaryBold dark:text-darkTextParagraph mr-3"
+          />
+        }
+      >
         {phone}
       </TextWithIcon>
 
-      <TextWithIcon icon={<MailIcon width={20} className="text-black mr-3" />}>
+      <TextWithIcon
+        icon={
+          <MailIcon
+            width={20}
+            className="text-darkPrimaryBold dark:text-darkTextParagraph mr-3"
+          />
+        }
+      >
         {email}
       </TextWithIcon>
     </section>
