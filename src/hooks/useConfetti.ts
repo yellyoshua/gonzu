@@ -33,14 +33,14 @@ export const useConfetti = ({ ...confettiOptions }: UseConfettiProps) => {
       window.cancelAnimationFrame(snowRequestAnimationFrameKey.current);
   };
 
-  const resetConfetti = (instant?: boolean) => {
+  const resetConfetti = () => {
     const resetAll = () => {
       unmountTimeouts();
       cancelAnimationsFrame();
       confettiRef.current && confettiRef.current.reset();
     };
 
-    instant ? resetAll() : setTimeout(() => resetAll(), 2000);
+    resetAll();
   };
 
   const fireworks = (timeOut: number = 5000) => {
@@ -158,7 +158,7 @@ export const useConfetti = ({ ...confettiOptions }: UseConfettiProps) => {
         } else {
           reset();
         }
-      })(confettiRef.current, () => resetConfetti(true));
+      })(confettiRef.current, () => resetConfetti());
     }
   };
 
@@ -171,7 +171,7 @@ export const useConfetti = ({ ...confettiOptions }: UseConfettiProps) => {
     }
 
     return () => {
-      resetConfetti(true);
+      resetConfetti();
     };
   }, []);
 
