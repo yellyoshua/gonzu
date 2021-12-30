@@ -16,9 +16,21 @@ export enum Celebrations {
   CHRISTMAS = "christmas",
 }
 
+export interface CelebrationOption {
+  celebration: Celebrations;
+  label: string;
+}
+
 export enum Songs {
   NONE = "none",
   CHRISTMAS = "christmas",
+  STUDYING = "studying",
+  SPIRITUAL = "spiritual",
+}
+
+export interface SongOption {
+  song: Songs;
+  label: string;
 }
 
 export interface SiteConfig {

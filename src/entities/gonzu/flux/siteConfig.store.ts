@@ -1,6 +1,23 @@
 import createStore from "zustand";
 import { devtools, persist } from "zustand/middleware";
-import { Celebrations, SiteConfig, Songs } from "../interfaces";
+import {
+  CelebrationOption,
+  Celebrations,
+  SiteConfig,
+  SongOption,
+  Songs,
+} from "../interfaces";
+
+export const celebrations: CelebrationOption[] = [
+  { celebration: Celebrations.CHRISTMAS, label: "Navidad" },
+  { celebration: Celebrations.NONE, label: "Ninguna" },
+];
+
+export const songs: SongOption[] = [
+  { song: Songs.NONE, label: "Ninguna" },
+  { song: Songs.CHRISTMAS, label: "Chill Navidad" },
+  { song: Songs.STUDYING, label: "Estudiar" },
+];
 
 const initialState: SiteConfig = {
   showInauguralConfetti: true,
