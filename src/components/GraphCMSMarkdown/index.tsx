@@ -11,7 +11,10 @@ export const GraphCMSMarkdown = ({
   ...props
 }: GraphCMSMarkdownProps) => {
   return (
-    <div className={`prose ${className}`} {...props}>
+    <div
+      className={`prose prose-neutral dark:prose-dark prose-base md:prose-base font-jost dark:pb-5 ${className}`}
+      {...props}
+    >
       <RichText
         {...richTextProps}
         renderers={{
