@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { usePageLeave } from "react-use";
 import { useConfetti } from "@/app/hooks/useConfetti";
 
 interface FireworksCelebrationProps {
@@ -15,15 +14,13 @@ export const FireworksCelebration = ({
     resize: true,
   });
 
-  usePageLeave(() => resetConfetti(true));
-
   useEffect(() => {
     if (execute) {
       confetti.fireworks(timeOut);
     }
 
     return () => {
-      resetConfetti(true);
+      resetConfetti();
     };
   }, [execute, timeOut]);
 

@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { usePageLeave } from "react-use";
 import { useConfetti } from "@/app/hooks/useConfetti";
 
 interface SnowCelebrationProps {
@@ -16,15 +15,13 @@ export const SnowCelebration = ({
     useWorker: true,
   });
 
-  usePageLeave(() => resetConfetti(true));
-
   useEffect(() => {
     if (execute) {
       confetti.snow(timeOut);
     }
 
     return () => {
-      resetConfetti(true);
+      resetConfetti();
     };
   }, [execute, timeOut]);
 
