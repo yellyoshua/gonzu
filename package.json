@@ -12,7 +12,9 @@
   "dependencies": {
     "@apollo/client": "^3.4.16",
     "@graphcms/rich-text-react-renderer": "^0.4.0",
+    "@headlessui/react": "^1.4.2",
     "@heroicons/react": "^1.0.5",
+    "canvas-confetti": "^1.4.0",
     "dayjs": "^1.10.7",
     "formik": "^2.2.6",
     "graphql": "^16.0.1",
@@ -28,6 +30,7 @@
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/react-hooks": "^5.1.0",
+    "@types/canvas-confetti": "^1.4.2",
     "@types/jest": "^27.0.2",
     "@types/node": "^12.12.21",
     "@types/react": "^16.9.16",

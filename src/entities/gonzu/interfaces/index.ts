@@ -11,6 +11,37 @@ export interface AcademicOffer {
   link: LinkUrl;
 }
 
+export enum Celebrations {
+  NONE = "none",
+  CHRISTMAS = "christmas",
+}
+
+export interface CelebrationOption {
+  celebration: Celebrations;
+  label: string;
+}
+
+export enum Songs {
+  NONE = "none",
+  CHRISTMAS = "christmas",
+  STUDYING = "studying",
+  SPIRITUAL = "spiritual",
+}
+
+export interface SongOption {
+  song: Songs;
+  label: string;
+}
+
+export interface SiteConfig {
+  showInauguralConfetti: boolean;
+  song: Songs;
+  songsProviderImplemented: boolean;
+  celebration: Celebrations;
+  celebrationsProviderImplemented: boolean;
+  darkMode: boolean;
+}
+
 export interface Gonzu {
   socialLinks: SocialLink[];
 
