@@ -3,6 +3,8 @@ import { FloatButton } from "@/app/components/FloatButton";
 import { Modal } from "@/app/components/Modal";
 import BeakerIcon from "@heroicons/react/outline/BeakerIcon";
 import { DarkModeSwitch } from "../../components/DarkModeSwitch";
+import { CelebrationsRadioPicker } from "../../components/CelebrationsRadioPicker";
+import { SongsRadioPicker } from "../../components/SongsRadioPicker";
 
 interface SiteConfigModalProps {}
 
@@ -14,8 +16,18 @@ export const SiteConfigModal = ({}: SiteConfigModalProps) => {
   const showModalHandler = () => setShowModal(true);
 
   const renderContent = () => (
-    <div className="w-full mt-2 sm:mt-5">
-      <p className="font-jost font-bold text-sm text-black">Modo oscuro:</p>
+    <div className="w-full sm:mt-5">
+      <p className="my-2 font-jost font-bold text-sm text-black">
+        Celebraci&oacute;n de fondo:
+      </p>
+      <CelebrationsRadioPicker />
+      <p className="my-2 font-jost font-bold text-sm text-black">
+        M&uacute;sica de fondo:
+      </p>
+      <SongsRadioPicker />
+      <p className="my-2 font-jost font-bold text-sm text-black">
+        Modo oscuro:
+      </p>
       <DarkModeSwitch />
     </div>
   );
