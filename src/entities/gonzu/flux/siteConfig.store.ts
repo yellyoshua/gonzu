@@ -15,8 +15,8 @@ export const celebrations: CelebrationOption[] = [
 
 export const songs: SongOption[] = [
   { song: Songs.NONE, label: "Ninguna" },
-  { song: Songs.CHRISTMAS, label: "Chill Navidad" },
-  { song: Songs.STUDYING, label: "Estudiar" },
+  { song: Songs.CHRISTMAS, label: "Navidad Calmada" },
+  { song: Songs.STUDYING, label: "Estudio (concentración)" },
 ];
 
 const initialState: SiteConfig = {
