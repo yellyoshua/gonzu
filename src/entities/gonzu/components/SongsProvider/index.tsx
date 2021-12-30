@@ -7,15 +7,10 @@ export const SongsProvider = () => {
   const song = useSiteConfigStore((state) => state.song);
   const [audio, stats, controls, audioRef] = useAudio({ src: "" });
 
-  const changeCurrentAudio = (srcAudio: string | null) => {
+  const changeCurrentAudio = async (srcAudio: string | null) => {
     audioRef.current && (audioRef.current.src = srcAudio ?? "");
 
-    if (srcAudio) {
-      controls.volume(0.01);
-      controls.play();
-    } else {
-      controls.pause();
-    }
+    if (!srcAudio) return controls.pause();
   };
 
   const replayCurrentAudio = () => {
@@ -23,6 +18,18 @@ export const SongsProvider = () => {
     controls.seek(0);
     controls.play();
   };
+
+  audioRef.current &&
+    (audioRef.current.onloadeddata = () => {
+      replayCurrentAudio();
+    });
+
+  useEffect(() => {
+    useSiteConfigStore.setState({ songsProviderImplemented: true });
+    return () => {
+      useSiteConfigStore.setState({ songsProviderImplemented: false });
+    };
+  }, []);
 
   useEffect(() => {
     if (song !== Songs.NONE && stats.paused) {
