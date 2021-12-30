@@ -33,12 +33,7 @@ export const useSiteConfigStore = createStore<SiteConfig>(
   devtools(
     persist(() => initialState, {
       name: "site-config",
-      version: 1,
-      merge: (storedState, currentState) => ({
-        ...currentState,
-        ...storedState,
-        darkMode: false,
-      }),
+      version: 2,
     })
   )
 );
