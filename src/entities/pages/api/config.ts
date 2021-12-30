@@ -1,6 +1,5 @@
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
-
-const ssrMode = typeof window === "undefined";
+import { isSSR } from "@/app/utils/dom.utils";
 
 const createHttpLink = () => {
   const uri = process.env.NEXT_PUBLIC_API_URI;
@@ -14,6 +13,7 @@ const createHttpLink = () => {
 
 export const GraphQLClient = () => {
   const link = createHttpLink();
+  const ssrMode = isSSR;
 
   return new ApolloClient({
     cache: new InMemoryCache(),
