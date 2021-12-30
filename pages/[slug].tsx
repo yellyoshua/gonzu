@@ -6,6 +6,11 @@ import { getPageBySlug } from "@/app/entities/pages/flux/pages.actions";
 import { usePageStore } from "@/app/entities/pages/flux/pages.store";
 import { Page } from "@/app/entities/pages/interfaces";
 import { PagesRecommendation } from "@/app/entities/pages/components/PagesRecommendation";
+import { SiteConfigModal } from "@/app/entities/gonzu/ui/SiteConfigModal";
+import {
+  CelebrationsProvider,
+  SongsProvider,
+} from "@/app/entities/gonzu/components/Providers";
 
 interface PagesProps {
   page: Page;
@@ -21,6 +26,9 @@ export default function Pages({ permaLink, page }: PagesProps) {
     <Layout seo={{ permaLink, title }}>
       <PageContent />
       <PagesRecommendation />
+      <SiteConfigModal />
+      <CelebrationsProvider />
+      <SongsProvider />
     </Layout>
   );
 }

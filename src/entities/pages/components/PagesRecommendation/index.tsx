@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { LinkUrl } from "@/app/interfaces";
 import ArrowLeftIcon from "@heroicons/react/outline/ArrowLeftIcon";
 import ArrowRightIcon from "@heroicons/react/outline/ArrowRightIcon";
-import { usePageStore } from "../../flux/pages.store";
-import { getPagesRecomendationsInStore } from "../../flux/pages.actions";
+import { usePageStore } from "@/app/entities/pages/flux/pages.store";
+import { getPagesRecomendationsInStore } from "@/app/entities/pages/flux/pages.actions";
 
 interface PagesRecommendationProps {}
 
@@ -18,7 +18,7 @@ export const PagesRecommendation = ({}: PagesRecommendationProps) => {
   const prevPage = (link: LinkUrl | null) =>
     link ? (
       <a
-        className="group flex items-center mr-3 hover:text-gray-900"
+        className="group flex items-center mr-3 text-gray-500 transition hover:text-gray-900 dark:hover:text-darkTextParagraph"
         href={link.url}
       >
         <ArrowLeftIcon className="w-4 mr-1" />
@@ -28,7 +28,7 @@ export const PagesRecommendation = ({}: PagesRecommendationProps) => {
 
   const nextPage = (link: LinkUrl) => (
     <a
-      className="group flex items-center ml-3 hover:text-gray-900"
+      className="group flex items-center ml-3 text-gray-500 transition hover:text-gray-900 dark:hover:text-darkTextParagraph"
       href={link.url}
     >
       {link.label}
@@ -41,7 +41,7 @@ export const PagesRecommendation = ({}: PagesRecommendationProps) => {
   }
 
   return (
-    <div className="mb-10 border-t-2 border-gray-300 pt-6 mx-3 text-gray-700 font-semibold flex items-center">
+    <div className="mb-10  pt-6 mx-3 text-gray-700 font-semibold flex items-center">
       {prevPage(recomendations.length === 1 ? null : recomendations[0])}
       <div className="flex-1" />
       {nextPage(recomendations[recomendations.length === 1 ? 0 : 1])}

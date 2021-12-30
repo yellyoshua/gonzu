@@ -6,7 +6,10 @@ export const GonzuBodyWrapper = ({
   ...props
 }: GonzuBody) => {
   return (
-    <main className={`bg-white min-h-screen ${className}`} {...props}>
+    <main
+      className={`bg-white dark:bg-darkPrimaryBold transition-colors duration-500 min-h-screen ${className}`}
+      {...props}
+    >
       {children}
     </main>
   );

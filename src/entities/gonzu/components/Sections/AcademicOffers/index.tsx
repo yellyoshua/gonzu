@@ -14,7 +14,7 @@ interface AcademicOffersProps {
 export const AcademicOffers = ({ academicOffers }: AcademicOffersProps) => {
   return (
     <div className="mt-6 mx-3">
-      <h2 className="text-2xl mb-3 text-center font-bold font-jost text-red-700">
+      <h2 className="text-2xl mb-3 text-center font-bold font-jost text-red-700 dark:text-sky-600">
         Nuestras ofertas académicas
       </h2>
       <div className="flex items-center justify-center">

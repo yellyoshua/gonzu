@@ -1,17 +1,16 @@
 import { Switch } from "@headlessui/react";
-import { useSiteConfigStore } from "../../flux/siteConfig.store";
+import { changeDarkMode } from "@/app/entities/gonzu/flux/actions/siteConfig.actions";
+import { useSiteConfigStore } from "@/app/entities/gonzu/flux/siteConfig.store";
 
 interface DarkModeSwitchProps {}
 
 export const DarkModeSwitch = ({}: DarkModeSwitchProps) => {
   const isDarkMode = useSiteConfigStore((state) => state.darkMode);
 
-  const toggleDarkMode = (darkMode: boolean) =>
-    useSiteConfigStore.setState({ darkMode });
+  const toggleDarkMode = (darkMode: boolean) => changeDarkMode(darkMode);
 
   return (
     <Switch
-      disabled
       checked={isDarkMode}
       onChange={toggleDarkMode}
       className={`${

@@ -20,17 +20,14 @@ export const NavBar = ({ logoElement, links }: NavBarProps) => {
               className="mx-6 border-b-2 border-transparent hover:border-red-700"
             >
               {external ? (
-                <a
-                  href={url}
-                  target="_blank"
-                  className="font-bold font-jost text-lg"
-                >
+                <a href={url} target="_blank">
                   <TextWithIcon
                     noMargin
+                    className="text-black dark:text-white font-bold font-jost text-lg"
                     icon={
                       <ExternalLinkIcon
                         width={20}
-                        className="text-black mr-3"
+                        className="text-black dark:text-white mr-3 "
                       />
                     }
                   >
@@ -39,7 +36,10 @@ export const NavBar = ({ logoElement, links }: NavBarProps) => {
                 </a>
               ) : (
                 <Link href={url}>
-                  <a href={url} className="font-bold font-jost text-lg">
+                  <a
+                    href={url}
+                    className="text-black dark:text-white font-bold font-jost text-lg"
+                  >
                     {label}
                   </a>
                 </Link>

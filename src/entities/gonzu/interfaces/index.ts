@@ -40,6 +40,7 @@ export interface SiteConfig {
   celebration: Celebrations;
   celebrationsProviderImplemented: boolean;
   darkMode: boolean;
+  timesActiveDarkMode: number;
 }
 
 export interface Gonzu {

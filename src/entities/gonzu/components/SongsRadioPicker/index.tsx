@@ -1,7 +1,10 @@
-import { RadioPicker } from "@/app/components/RadioPicker";
 import React, { useMemo } from "react";
-import { songs, useSiteConfigStore } from "../../flux/siteConfig.store";
-import { SongOption } from "../../interfaces";
+import { RadioPicker } from "@/app/components/RadioPicker";
+import {
+  songs,
+  useSiteConfigStore,
+} from "@/app/entities/gonzu/flux/siteConfig.store";
+import { SongOption } from "@/app/entities/gonzu/interfaces";
 
 export const SongsRadioPicker = () => {
   const song = useSiteConfigStore((state) => state.song);

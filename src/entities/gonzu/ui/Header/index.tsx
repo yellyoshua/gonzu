@@ -32,7 +32,13 @@ export const GonzuHeader = () => {
     <DrawerNavbar
       links={links}
       copyright={copyright}
-      logoElement={<LogoBanner logoBanner={logosBanner} className="h-16" />}
+      logoElement={
+        <LogoBanner
+          removeVerticalPadding
+          logoBanner={logosBanner}
+          className="h-[4.2rem]"
+        />
+      }
     />
   );
 };

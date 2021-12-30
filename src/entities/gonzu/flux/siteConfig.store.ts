@@ -6,7 +6,7 @@ import {
   SiteConfig,
   SongOption,
   Songs,
-} from "../interfaces";
+} from "@/app/entities/gonzu/interfaces";
 
 export const celebrations: CelebrationOption[] = [
   { celebration: Celebrations.CHRISTMAS, label: "Navidad" },
@@ -15,8 +15,8 @@ export const celebrations: CelebrationOption[] = [
 
 export const songs: SongOption[] = [
   { song: Songs.NONE, label: "Ninguna" },
-  { song: Songs.CHRISTMAS, label: "Chill Navidad" },
-  { song: Songs.STUDYING, label: "Estudiar" },
+  { song: Songs.CHRISTMAS, label: "Navidad Calmada" },
+  { song: Songs.STUDYING, label: "Estudio (concentración)" },
 ];
 
 const initialState: SiteConfig = {
@@ -26,18 +26,14 @@ const initialState: SiteConfig = {
   celebration: Celebrations.NONE,
   celebrationsProviderImplemented: false,
   darkMode: false,
+  timesActiveDarkMode: 0,
 };
 
 export const useSiteConfigStore = createStore<SiteConfig>(
   devtools(
     persist(() => initialState, {
       name: "site-config",
-      version: 1,
-      merge: (storedState, currentState) => ({
-        ...currentState,
-        ...storedState,
-        darkMode: false,
-      }),
+      version: 2,
     })
   )
 );

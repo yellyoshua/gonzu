@@ -23,22 +23,48 @@ export const PageCardDetails = ({ page }: PageCardDetailsProps) => {
 
   return (
     <div className="mx-3 mb-10 mt-5 p-2">
-      <h1 className="text-center text-4xl font-bold font-jost">{page.title}</h1>
+      <h1 className="text-center text-4xl font-bold font-jost text-darkPrimaryBold dark:text-darkTextBold">
+        {page.title}
+      </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-        <div className="flex items-start justify-center flex-col text-sm m-0 md:m-auto">
-          <TextWithIcon icon={<CalendarIcon className="mr-2" width={15} />}>
+        <div className="flex items-start justify-center flex-col text-sm m-0 md:m-auto text-darkPrimaryBold dark:text-darkTextParagraph">
+          <TextWithIcon
+            className="text-darkPrimaryBold dark:text-darkTextParagraph"
+            icon={
+              <CalendarIcon
+                className="mr-2 text-darkPrimaryBold dark:text-darkTextBold"
+                width={15}
+              />
+            }
+          >
             <strong>Publicado: </strong>
           </TextWithIcon>
           {createdAt}
         </div>
-        <div className="flex items-start justify-center flex-col text-sm m-0 md:m-auto">
-          <TextWithIcon icon={<ClockIcon className="mr-2" width={15} />}>
+        <div className="flex items-start justify-center flex-col text-sm m-0 md:m-auto text-darkPrimaryBold dark:text-darkTextParagraph">
+          <TextWithIcon
+            className="text-darkPrimaryBold dark:text-darkTextParagraph"
+            icon={
+              <ClockIcon
+                className="mr-2 text-darkPrimaryBold dark:text-darkTextBold"
+                width={15}
+              />
+            }
+          >
             <strong>Actualizado: </strong>
           </TextWithIcon>
           {updatedAt} ({timeAgo})
         </div>
-        <div className="flex items-start justify-center flex-col text-sm m-0 md:m-auto">
-          <TextWithIcon icon={<CalendarIcon className="mr-2" width={15} />}>
+        <div className="flex items-start justify-center flex-col text-sm m-0 md:m-auto text-darkPrimaryBold dark:text-darkTextParagraph">
+          <TextWithIcon
+            className="text-darkPrimaryBold dark:text-darkTextParagraph"
+            icon={
+              <CalendarIcon
+                className="mr-2 text-darkPrimaryBold dark:text-darkTextBold"
+                width={15}
+              />
+            }
+          >
             <strong>Lectura (minutos): </strong>
           </TextWithIcon>
           {readTime}
