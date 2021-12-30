@@ -6,7 +6,7 @@ import {
   SiteConfig,
   SongOption,
   Songs,
-} from "../interfaces";
+} from "@/app/entities/gonzu/interfaces";
 
 export const celebrations: CelebrationOption[] = [
   { celebration: Celebrations.CHRISTMAS, label: "Navidad" },

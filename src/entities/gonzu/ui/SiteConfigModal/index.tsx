@@ -2,9 +2,9 @@ import { useState } from "react";
 import { FloatButton } from "@/app/components/FloatButton";
 import { Modal } from "@/app/components/Modal";
 import BeakerIcon from "@heroicons/react/outline/BeakerIcon";
-import { DarkModeSwitch } from "../../components/DarkModeSwitch";
-import { CelebrationsRadioPicker } from "../../components/CelebrationsRadioPicker";
-import { SongsRadioPicker } from "../../components/SongsRadioPicker";
+import { DarkModeSwitch } from "@/app/entities/gonzu/components/DarkModeSwitch";
+import { CelebrationsRadioPicker } from "@/app/entities/gonzu/components/CelebrationsRadioPicker";
+import { SongsRadioPicker } from "@/app/entities/gonzu/components/SongsRadioPicker";
 import { useMedia } from "react-use";
 
 interface SiteConfigModalProps {}

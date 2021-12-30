@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useIdle } from "react-use";
-import { useSiteConfigStore } from "../../flux/siteConfig.store";
-import { Celebrations } from "../../interfaces";
+import { useSiteConfigStore } from "@/app/entities/gonzu/flux/siteConfig.store";
+import { Celebrations } from "@/app/entities/gonzu/interfaces";
 import { SnowCelebration } from "./SnowCelebration";
 import { FireworksCelebration } from "./FireworksCelebration";
 

@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { LinkUrl } from "@/app/interfaces";
 import ArrowLeftIcon from "@heroicons/react/outline/ArrowLeftIcon";
 import ArrowRightIcon from "@heroicons/react/outline/ArrowRightIcon";
-import { usePageStore } from "../../flux/pages.store";
-import { getPagesRecomendationsInStore } from "../../flux/pages.actions";
+import { usePageStore } from "@/app/entities/pages/flux/pages.store";
+import { getPagesRecomendationsInStore } from "@/app/entities/pages/flux/pages.actions";
 
 interface PagesRecommendationProps {}
 

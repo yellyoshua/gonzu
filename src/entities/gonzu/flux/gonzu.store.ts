@@ -5,7 +5,7 @@ import {
 } from "@/app/constants";
 import createStore from "zustand";
 import { devtools } from "zustand/middleware";
-import { Gonzu } from "../interfaces";
+import { Gonzu } from "@/app/entities/gonzu/interfaces";
 
 const initialState: Gonzu = {
   socialLinks: [],

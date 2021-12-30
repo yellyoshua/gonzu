@@ -1,6 +1,6 @@
 import createStore from "zustand";
 import { devtools } from "zustand/middleware";
-import { PageStore } from "../interfaces";
+import { PageStore } from "@/app/entities/pages/interfaces";
 
 const initialState: PageStore = {
   recomendations: [],

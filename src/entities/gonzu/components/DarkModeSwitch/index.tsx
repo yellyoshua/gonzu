@@ -1,6 +1,6 @@
 import { Switch } from "@headlessui/react";
-import { changeDarkMode } from "../../flux/actions/siteConfig.actions";
-import { useSiteConfigStore } from "../../flux/siteConfig.store";
+import { changeDarkMode } from "@/app/entities/gonzu/flux/actions/siteConfig.actions";
+import { useSiteConfigStore } from "@/app/entities/gonzu/flux/siteConfig.store";
 
 interface DarkModeSwitchProps {}
 

@@ -1,7 +1,10 @@
 import { RadioPicker } from "@/app/components/RadioPicker";
 import React, { useMemo } from "react";
-import { celebrations, useSiteConfigStore } from "../../flux/siteConfig.store";
-import { CelebrationOption } from "../../interfaces";
+import {
+  celebrations,
+  useSiteConfigStore,
+} from "@/app/entities/gonzu/flux/siteConfig.store";
+import { CelebrationOption } from "@/app/entities/gonzu/interfaces";
 
 export const CelebrationsRadioPicker = () => {
   const celebration = useSiteConfigStore((state) => state.celebration);

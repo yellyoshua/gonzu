@@ -1,7 +1,7 @@
 import { isSSR } from "@/app/utils/dom.utils";
 import { useEffect } from "react";
-import { changeDarkMode } from "../../../flux/actions/siteConfig.actions";
-import { useSiteConfigStore } from "../../../flux/siteConfig.store";
+import { changeDarkMode } from "@/app/entities/gonzu/flux/actions/siteConfig.actions";
+import { useSiteConfigStore } from "@/app/entities/gonzu/flux/siteConfig.store";
 
 export const DarkModeProvider = () => {
   const isDarkMode = useSiteConfigStore((state) => state.darkMode);

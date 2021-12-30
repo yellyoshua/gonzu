@@ -1,6 +1,6 @@
 import { LinkUrl } from "@/app/interfaces";
-import { Page } from "../../interfaces";
-import { PageRepository } from "../repositories";
+import { Page } from "@/app/entities/pages/interfaces";
+import { PageRepository } from "@/app/entities/pages/api/repositories";
 
 export class PagesController {
   private pagesRepository: PageRepository;

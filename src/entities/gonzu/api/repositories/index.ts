@@ -1,4 +1,4 @@
-import { configureEndpointAPI } from "../config";
+import { configureEndpointAPI } from "@/app/entities/gonzu/api/config";
 
 export class GonzuRepository {
   private endpoint: (path: string) => string;

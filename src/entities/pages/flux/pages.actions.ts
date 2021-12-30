@@ -1,5 +1,5 @@
-import { PagesController } from "../api/controllers";
-import { Page } from "../interfaces";
+import { PagesController } from "@/app/entities/pages/api/controllers";
+import { Page } from "@/app/entities/pages/interfaces";
 import { usePageStore } from "./pages.store";
 
 const pagesController = new PagesController();

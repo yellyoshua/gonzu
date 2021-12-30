@@ -1,4 +1,4 @@
-import { useSiteConfigStore } from "../siteConfig.store";
+import { useSiteConfigStore } from "@/app/entities/gonzu/flux/siteConfig.store";
 
 export const changeDarkMode = (
   active: boolean,

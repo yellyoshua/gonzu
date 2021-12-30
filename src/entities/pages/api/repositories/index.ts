@@ -1,6 +1,6 @@
 import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
 import * as query from "./graphql-queries";
-import { GraphQLClient } from "../config";
+import { GraphQLClient } from "@/app/entities/pages/api/config";
 
 export class PageRepository {
   private api: ApolloClient<NormalizedCacheObject>;
