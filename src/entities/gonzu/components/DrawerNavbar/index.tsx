@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useLockBodyScroll, useToggle, useWindowScroll } from "react-use";
+import { useLockBodyScroll, useToggle } from "react-use";
 import ExternalLinkIcon from "@heroicons/react/solid/ExternalLinkIcon";
 import { TextWithIcon } from "@/app/components/commons/TextWithIcon";
 import { LinkUrl } from "@/app/interfaces";
@@ -15,17 +15,12 @@ export const DrawerNavbar = ({
   links,
   copyright,
 }: DrawerNavbarProps) => {
-  const { y } = useWindowScroll();
   const [isOpen, toggleDrawer] = useToggle(false);
 
   useLockBodyScroll(isOpen);
 
   return (
-    <nav
-      className={`flex ${
-        y >= 80 && "fixed"
-      } w-full items-center justify-between px-6 h-20 bg-white text-gray-700 border-b border-gray-200 z-10`}
-    >
+    <nav className="flex sticky top-0 w-full items-center justify-between px-6 h-20 bg-white text-gray-700 border-b border-gray-200 z-10">
       <div className="flex items-center w-full">
         <button className="mr-2" aria-label="Open Menu" onClick={toggleDrawer}>
           <svg

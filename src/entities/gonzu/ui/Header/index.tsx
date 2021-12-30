@@ -17,20 +17,22 @@ export const GonzuHeader = () => {
     shallow
   );
 
-  return (
-    <header suppressHydrationWarning className="w-full relative">
-      {isMDBreakpoint ? (
+  if (isMDBreakpoint) {
+    return (
+      <header suppressHydrationWarning className="w-full relative">
         <NavBar
           logoElement={<LogoBanner logoBanner={logosBanner} />}
           links={links}
         />
-      ) : (
-        <DrawerNavbar
-          links={links}
-          copyright={copyright}
-          logoElement={<LogoBanner logoBanner={logosBanner} className="h-16" />}
-        />
-      )}
-    </header>
+      </header>
+    );
+  }
+
+  return (
+    <DrawerNavbar
+      links={links}
+      copyright={copyright}
+      logoElement={<LogoBanner logoBanner={logosBanner} className="h-16" />}
+    />
   );
 };
