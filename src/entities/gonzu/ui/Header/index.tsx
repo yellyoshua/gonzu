@@ -19,7 +19,7 @@ export const GonzuHeader = () => {
 
   if (isMDBreakpoint) {
     return (
-      <header suppressHydrationWarning className="w-full relative ">
+      <header suppressHydrationWarning className="w-full relative">
         <NavBar
           logoElement={<LogoBanner logoBanner={logosBanner} />}
           links={links}

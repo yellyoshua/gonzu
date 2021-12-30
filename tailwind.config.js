@@ -3,7 +3,6 @@ const colors = require("tailwindcss/colors");
 module.exports = {
   darkMode: "class", // or 'media' or 'class'
   content: ["./pages/**/*.{js,ts,jsx,tsx}", "./src/**/*.{js,ts,jsx,tsx}"],
-  preserveHtmlElements: false,
   theme: {
     extend: {
       fontFamily: {
@@ -88,7 +87,6 @@ module.exports = {
   plugins: [require("@tailwindcss/typography")],
   corePlugins: {
     invert: true,
-    preserveHtmlElements: false,
     float: false,
   },
 };
