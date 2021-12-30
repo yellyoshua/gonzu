@@ -26,6 +26,7 @@ const initialState: SiteConfig = {
   celebration: Celebrations.NONE,
   celebrationsProviderImplemented: false,
   darkMode: false,
+  timesActiveDarkMode: 0,
 };
 
 export const useSiteConfigStore = createStore<SiteConfig>(

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useAudio } from "react-use";
-import { useSiteConfigStore } from "../../flux/siteConfig.store";
-import { Songs } from "../../interfaces";
+import { useSiteConfigStore } from "../../../flux/siteConfig.store";
+import { Songs } from "../../../interfaces";
 
 export const SongsProvider = () => {
   const song = useSiteConfigStore((state) => state.song);

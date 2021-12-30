@@ -3,6 +3,7 @@ import { SeoHead, SeoHeadProps } from "@/app/components";
 import { GonzuFooter } from "@/app/entities/gonzu/ui/Footer";
 import { GonzuHeader } from "@/app/entities/gonzu/ui/Header";
 import { GonzuBodyWrapper } from "@/app/entities/gonzu/ui/BodyWrapper";
+import { DarkModeProvider } from "@/app/entities/gonzu/components/Providers";
 
 interface BodyContentProps extends React.ComponentProps<"div"> {}
 
@@ -28,6 +29,7 @@ export const Layout = ({ children, seo }: LayoutProps) => {
         <BodyContent>{children}</BodyContent>
         <GonzuFooter />
       </GonzuBodyWrapper>
+      <DarkModeProvider />
       <GlobalStyles />
     </>
   );
