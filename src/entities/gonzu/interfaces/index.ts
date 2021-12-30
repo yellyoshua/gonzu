@@ -36,7 +36,9 @@ export interface SongOption {
 export interface SiteConfig {
   showInauguralConfetti: boolean;
   song: Songs;
+  songsProviderImplemented: boolean;
   celebration: Celebrations;
+  celebrationsProviderImplemented: boolean;
   darkMode: boolean;
 }
 

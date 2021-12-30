@@ -22,7 +22,9 @@ export const songs: SongOption[] = [
 const initialState: SiteConfig = {
   showInauguralConfetti: true,
   song: Songs.NONE,
+  songsProviderImplemented: false,
   celebration: Celebrations.NONE,
+  celebrationsProviderImplemented: false,
   darkMode: false,
 };
 
