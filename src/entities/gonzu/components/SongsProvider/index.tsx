@@ -14,7 +14,7 @@ export const SongsProvider = () => {
   };
 
   const replayCurrentAudio = () => {
-    controls.volume(0.01);
+    controls.volume(0.05);
     controls.seek(0);
     controls.play();
   };
