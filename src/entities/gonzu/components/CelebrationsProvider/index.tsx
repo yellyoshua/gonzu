@@ -19,6 +19,13 @@ export const CelebrationsProvider = ({}: CelebrationsProviderProps) => {
   const isUserIdle = useIdle(fiveMinutesIdleTimeout);
 
   useEffect(() => {
+    useSiteConfigStore.setState({ celebrationsProviderImplemented: true });
+    return () => {
+      useSiteConfigStore.setState({ celebrationsProviderImplemented: false });
+    };
+  }, []);
+
+  useEffect(() => {
     const timeout = setTimeout(() => {
       useSiteConfigStore.setState({ showInauguralConfetti: false });
     }, fiveMinutes);
