@@ -6,7 +6,7 @@ export const WelcomePhrase = () => {
       </h1>
       <p className="font-jost mt-3 leading-relaxed font-normal text-lg text-darkPrimaryBold dark:text-darkTextParagraph">
         Reciban un cordial saludo de bienvenida a la página de la{" "}
-        <strong className="text-red-700">
+        <strong className="text-red-700 dark:text-sky-600">
           Unidad Educativa Cardenal González Zumárraga
         </strong>
         , en donde van a recibir información referente a nuestra institución

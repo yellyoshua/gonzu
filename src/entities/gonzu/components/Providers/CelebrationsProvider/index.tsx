@@ -5,7 +5,7 @@ import { Celebrations } from "@/app/entities/gonzu/interfaces";
 import { SnowCelebration } from "./SnowCelebration";
 import { FireworksCelebration } from "./FireworksCelebration";
 
-const fiveMinutesIdleTimeout = 300000;
+const tenMinutes = 600000;
 const fiveMinutes = 300000;
 const nineSeconds = 9000;
 
@@ -16,7 +16,7 @@ export const CelebrationsProvider = ({}: CelebrationsProviderProps) => {
   const showInauguralConfetti = useSiteConfigStore(
     (state) => state.showInauguralConfetti
   );
-  const isUserIdle = useIdle(fiveMinutesIdleTimeout);
+  const isUserIdle = useIdle(fiveMinutes);
 
   useEffect(() => {
     useSiteConfigStore.setState({ celebrationsProviderImplemented: true });
@@ -28,7 +28,7 @@ export const CelebrationsProvider = ({}: CelebrationsProviderProps) => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       useSiteConfigStore.setState({ showInauguralConfetti: false });
-    }, fiveMinutes);
+    }, tenMinutes);
 
     return () => {
       clearTimeout(timeout);
