@@ -24,7 +24,7 @@ export const SnowCelebration = ({
     }
 
     return () => {
-      resetConfetti();
+      resetConfetti(true);
     };
   }, [execute, timeOut]);
 

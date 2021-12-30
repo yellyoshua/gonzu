@@ -23,7 +23,7 @@ export const FireworksCelebration = ({
     }
 
     return () => {
-      resetConfetti();
+      resetConfetti(true);
     };
   }, [execute, timeOut]);
 
