@@ -35,7 +35,29 @@ const initialState: Gonzu = {
       { label: "Pastoral", url: "/pastoral" },
       { label: "Inscripciones", url: "/app/inscripciones" },
     ],
-    academicOffers: [],
+    academicOffers: [
+      {
+        title: "Preparatoria y Educación Básica Elemental.",
+        link: {
+          url: "/preparatoria-basica-elemental",
+          label: "Preparatoria y Educación Básica Elemental.",
+        },
+      },
+      {
+        title: "Educación Básica media y Educación Básica Superior.",
+        link: {
+          url: "/basica-media-y-superior",
+          label: "Educación Básica media y Educación Básica Superior.",
+        },
+      },
+      {
+        title: "Bachillerato General Unificado.",
+        link: {
+          url: "/bachillerato-general-unificado",
+          label: "Bachillerato General Unificado.",
+        },
+      },
+    ],
   },
   footer: {
     information: {

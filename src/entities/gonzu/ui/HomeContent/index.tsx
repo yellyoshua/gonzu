@@ -1,45 +1,18 @@
 import { Welcome } from "@/app/entities/gonzu/components/Sections/Welcome";
 import { AcademicOffers } from "@/app/entities/gonzu/components/Sections/AcademicOffers";
 import { AboutUS } from "@/app/entities/gonzu/components/Sections/AboutUS";
+import { useGonzuStore } from "@/app/entities/gonzu/flux/gonzu.store";
 
 interface HomeContentProps {}
 
 export const HomeContent = ({}: HomeContentProps) => {
+  const welcomeLinks = useGonzuStore((state) => state.body.welcomeLinks);
+  const academicOffers = useGonzuStore((state) => state.body.academicOffers);
+
   return (
     <div>
-      <Welcome
-        buttonsLink={[
-          { label: "Dar un Tour", url: "/app/tour", disabled: true },
-          { label: "Nosotros", url: "/nosotros" },
-          { label: "Pastoral", url: "/pastoral" },
-          { label: "Inscripciones", url: "/app/inscripciones" },
-        ]}
-      />
-      <AcademicOffers
-        academicOffers={[
-          {
-            title: "Preparatoria y Educación Básica Elemental.",
-            link: {
-              url: "/preparatoria-basica-elemental",
-              label: "Preparatoria y Educación Básica Elemental.",
-            },
-          },
-          {
-            title: "Educación Básica media y Educación Básica Superior.",
-            link: {
-              url: "/basica-media-y-superior",
-              label: "Educación Básica media y Educación Básica Superior.",
-            },
-          },
-          {
-            title: "Bachillerato General Unificado.",
-            link: {
-              url: "/bachillerato-general-unificado",
-              label: "Bachillerato General Unificado.",
-            },
-          },
-        ]}
-      />
+      <Welcome buttonsLink={welcomeLinks} />
+      <AcademicOffers academicOffers={academicOffers} />
       <AboutUS />
     </div>
   );
