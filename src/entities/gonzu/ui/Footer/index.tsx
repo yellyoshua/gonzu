@@ -13,7 +13,7 @@ export function GonzuFooter() {
   );
 
   return (
-    <footer className="py-10 sm:my-10 border-t-2 border-gray-300">
+    <footer className="py-10 border-t-2 border-gray-300">
       <FooterSections information={footer.information} links={footer.links} />
       <Copyright className="mt-10" copyright={copyright} />
     </footer>
