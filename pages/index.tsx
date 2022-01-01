@@ -1,10 +1,21 @@
 import { Layout } from "@/app/ui/Layout";
-import { UnderMaintenance } from "@/app/ui/UnderMaintenance";
+import { HomeContent } from "@/app/entities/gonzu/ui/HomeContent";
+import { useGonzuStore } from "@/app/entities/gonzu/flux/gonzu.store";
+import { SiteConfigModal } from "@/app/entities/gonzu/ui/SiteConfigModal";
+import {
+  CelebrationsProvider,
+  SongsProvider,
+} from "@/app/entities/gonzu/components/Providers";
 
-export default function IndexPage() {
+export default function HomePage() {
+  useGonzuStore.setState({});
+
   return (
-    <Layout seoProps={{ permaLink: "/" }}>
-      <UnderMaintenance />
+    <Layout seo={{ permaLink: "/" }}>
+      <HomeContent />
+      <SiteConfigModal />
+      <CelebrationsProvider />
+      <SongsProvider />
     </Layout>
   );
 }

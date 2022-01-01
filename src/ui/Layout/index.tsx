@@ -1,25 +1,46 @@
-import React, { ReactNode, Fragment } from "react";
-import { Header, Footer, SeoHead, SeoHeadProps } from "@/app/components";
+import React, { ReactNode } from "react";
+import { SeoHead, SeoHeadProps } from "@/app/components";
+import { GonzuFooter } from "@/app/entities/gonzu/ui/Footer";
+import { GonzuHeader } from "@/app/entities/gonzu/ui/Header";
+import { GonzuBodyWrapper } from "@/app/entities/gonzu/ui/BodyWrapper";
+import { DarkModeProvider } from "@/app/entities/gonzu/components/Providers";
+
+interface BodyContentProps extends React.ComponentProps<"div"> {}
+
+const BodyContent = ({ children, ...props }: BodyContentProps) => {
+  return (
+    <div {...props} className="pt-4">
+      {children}
+    </div>
+  );
+};
 
 interface LayoutProps {
-  seoProps: SeoHeadProps;
+  seo: SeoHeadProps;
   children?: ReactNode;
 }
 
-export function Layout({ children, seoProps }: LayoutProps) {
+export const Layout = ({ children, seo }: LayoutProps) => {
   return (
-    <Fragment>
-      <SeoHead {...seoProps} />
-      <main className="bg-white min-h-screen">
-        <Header />
-        {children}
-        <Footer />
-      </main>
-      <style global jsx>{`
-        img {
-          pointer-events: none;
-        }
-      `}</style>
-    </Fragment>
+    <>
+      <SeoHead {...seo} />
+      <GonzuBodyWrapper>
+        <GonzuHeader />
+        <BodyContent>{children}</BodyContent>
+        <GonzuFooter />
+      </GonzuBodyWrapper>
+      <DarkModeProvider />
+      <GlobalStyles />
+    </>
   );
-}
+};
+
+const GlobalStyles = () => {
+  return (
+    <style global jsx>{`
+      img {
+        pointer-events: none;
+      }
+    `}</style>
+  );
+};

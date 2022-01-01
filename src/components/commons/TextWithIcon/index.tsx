@@ -2,19 +2,30 @@ import { ReactNode } from "react";
 
 interface TextWithIconProps {
   icon: ReactNode;
-  children: string;
+  children: string | ReactNode;
   noMargin?: boolean;
+  right?: boolean;
+  className?: string;
 }
 
 export const TextWithIcon = ({
   icon,
   children,
   noMargin,
+  right,
+  className,
 }: TextWithIconProps) => {
   return (
     <div className={`flex items-center ${noMargin ?? "my-3"} max-w-xs`}>
-      {icon}
-      <p className="text-black flex-1">{children}</p>
+      {!right && icon}
+      <p
+        className={`${
+          className ? className : "text-black dark:text-white"
+        } flex-1 break-all`}
+      >
+        {children}
+      </p>
+      {right && icon}
     </div>
   );
 };
