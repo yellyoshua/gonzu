@@ -43,7 +43,7 @@ export const getStaticProps: GetStaticProps<PagesProps> = async (ctx) => {
   return { props: { permaLink, page: page! } };
 };
 
-export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+export const getStaticPaths: GetStaticPaths = async () => {
   const pages = await getPagesSlug();
 
   return {
