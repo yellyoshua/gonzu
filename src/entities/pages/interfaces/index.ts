@@ -1,6 +1,7 @@
 import { Asset, LinkUrl, RawRichText } from "@/app/interfaces";
 
 export interface Page {
+  id: string;
   slug: string;
   title: string;
   locale: "es";
@@ -9,6 +10,8 @@ export interface Page {
   content: RawRichText | { html: string } | null;
   backdrop: Asset | null;
 }
+
+export type PageSlug = Pick<Page, "id" | "slug">;
 
 export interface PageStore {
   recomendations: LinkUrl[];

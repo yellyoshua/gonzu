@@ -1,8 +1,10 @@
-import { GetServerSideProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import { Layout } from "@/app/ui/Layout";
-import { setUpCustomHeaders } from "@/app/utils/server.utils";
 import { PageContent } from "@/app/entities/pages/ui/PageContent";
-import { getPageBySlug } from "@/app/entities/pages/flux/pages.actions";
+import {
+  getPageBySlug,
+  getPagesSlug,
+} from "@/app/entities/pages/flux/pages.actions";
 import { usePageStore } from "@/app/entities/pages/flux/pages.store";
 import { Page } from "@/app/entities/pages/interfaces";
 import { PagesRecommendation } from "@/app/entities/pages/components/PagesRecommendation";
@@ -33,10 +35,7 @@ export default function Pages({ permaLink, page }: PagesProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<PagesProps> = async (
-  ctx
-) => {
-  setUpCustomHeaders(ctx.res);
+export const getStaticProps: GetStaticProps<PagesProps> = async (ctx) => {
   const permaLink =
     (Array.isArray(ctx.params?.slug)
       ? ctx.params?.slug[0] ?? null
@@ -54,4 +53,13 @@ export const getServerSideProps: GetServerSideProps<PagesProps> = async (
   }
 
   return { notFound: true };
+};
+
+export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+  const pages = await getPagesSlug();
+
+  return {
+    paths: pages.map(({ slug }) => ({ params: { slug } })),
+    fallback: false,
+  };
 };
