@@ -9,6 +9,10 @@ export class PageRepository {
     this.api = GraphQLClient();
   }
 
+  getPagesSlug() {
+    return this.api.query({ query: query.GET_PAGES_SLUG });
+  }
+
   getPageBySlug(slug: string) {
     return this.api.query({
       query: query.GET_PAGE_BY_SLUG,

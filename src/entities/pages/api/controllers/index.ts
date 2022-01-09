@@ -1,11 +1,17 @@
 import { LinkUrl } from "@/app/interfaces";
-import { Page } from "@/app/entities/pages/interfaces";
+import { Page, PageSlug } from "@/app/entities/pages/interfaces";
 import { PageRepository } from "@/app/entities/pages/api/repositories";
 
 export class PagesController {
   private pagesRepository: PageRepository;
   constructor() {
     this.pagesRepository = new PageRepository();
+  }
+
+  async getPagesSlug(): Promise<PageSlug[]> {
+    const { data } = await this.pagesRepository.getPagesSlug();
+    const { pages } = data ?? {};
+    return pages ?? [];
   }
 
   async getPageBySlug(slug: string): Promise<null | Page> {

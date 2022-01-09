@@ -4,6 +4,8 @@ import { usePageStore } from "./pages.store";
 
 const pagesController = new PagesController();
 
+export const getPagesSlug = async () => pagesController.getPagesSlug();
+
 export const getPageBySlug = async (slug: string) => {
   try {
     const page = await pagesController.getPageBySlug(slug);
