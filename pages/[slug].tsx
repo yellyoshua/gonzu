@@ -36,30 +36,18 @@ export default function Pages({ permaLink, page }: PagesProps) {
 }
 
 export const getStaticProps: GetStaticProps<PagesProps> = async (ctx) => {
-  const permaLink =
-    (Array.isArray(ctx.params?.slug)
-      ? ctx.params?.slug[0] ?? null
-      : ctx.params?.slug) ?? null;
+  const permaLink = ctx.params?.slug as string;
 
-  if (permaLink) {
-    const page = await getPageBySlug(permaLink);
+  const page = await getPageBySlug(permaLink);
 
-    if (page) {
-      return {
-        props: { permaLink, page },
-        notFound: false,
-      };
-    }
-  }
-
-  return { notFound: true };
+  return { props: { permaLink, page: page! } };
 };
 
-export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+export const getStaticPaths: GetStaticPaths = async () => {
   const pages = await getPagesSlug();
 
   return {
     paths: pages.map(({ slug }) => ({ params: { slug } })),
-    fallback: false,
+    fallback: "blocking",
   };
 };
