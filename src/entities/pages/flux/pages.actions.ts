@@ -6,14 +6,8 @@ const pagesController = new PagesController();
 
 export const getPagesSlug = async () => pagesController.getPagesSlug();
 
-export const getPageBySlug = async (slug: string) => {
-  try {
-    const page = await pagesController.getPageBySlug(slug);
-    return page;
-  } catch (error) {
-    return null;
-  }
-};
+export const getPageBySlug = async (slug: string) =>
+  pagesController.getPageBySlug(slug);
 
 export const setPageInToStore = (page: Page) => {
   usePageStore.setState({ page, loading: false });
