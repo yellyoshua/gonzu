@@ -36,7 +36,7 @@ export const GonzuHeader = () => {
         <LogoBanner
           removeVerticalPadding
           logoBanner={logosBanner}
-          className="h-[4.2rem]"
+          className="h-16"
         />
       }
     />

@@ -2,7 +2,9 @@ const colors = require("tailwindcss/colors");
 
 module.exports = {
   darkMode: "class", // or 'media' or 'class'
-  content: ["./pages/**/*.{js,ts,jsx,tsx}", "./src/**/*.{js,ts,jsx,tsx}"],
+  purge: {
+    content: ["./pages/**/*.{js,ts,jsx,tsx}", "./src/**/*.{js,ts,jsx,tsx}"],
+  },
   theme: {
     extend: {
       fontFamily: {
@@ -15,6 +17,8 @@ module.exports = {
         darkPrimaryBold: colors.gray["900"],
         darkTextBold: colors.white,
         darkTextParagraph: colors.gray["200"],
+        violet: { 800: "#5b21b6" },
+        sky: { 600: "#0284c7" },
       },
       typography: (theme) => ({
         dark: {
