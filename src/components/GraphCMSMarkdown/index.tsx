@@ -1,3 +1,4 @@
+import { useSiteConfigStore } from "@/app/entities/gonzu/flux/siteConfig.store";
 import { RichText } from "@graphcms/rich-text-react-renderer";
 import { RichTextProps } from "@graphcms/rich-text-types";
 
@@ -10,9 +11,12 @@ export const GraphCMSMarkdown = ({
   richTextProps,
   ...props
 }: GraphCMSMarkdownProps) => {
+  const isDarkMode = useSiteConfigStore((state) => state.darkMode);
   return (
     <div
-      className={`prose prose-neutral dark:prose-dark prose-base md:prose-base font-jost dark:pb-5 ${className}`}
+      className={`prose ${
+        isDarkMode ? "prose-dark" : "prose-base"
+      } font-jost dark:pb-5 ${className}`}
       {...props}
     >
       <RichText
