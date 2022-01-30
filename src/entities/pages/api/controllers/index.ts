@@ -14,10 +14,11 @@ export class PagesController {
     return pages ?? [];
   }
 
-  async getPageBySlug(slug: string): Promise<null | Page> {
+  async getPageBySlug(slug: string): Promise<Page> {
     const { data } = await this.pagesRepository.getPageBySlug(slug);
     const { page } = data ?? {};
-    return page ? page : null;
+    if (!page) throw new Error("Site not found: 404");
+    return page;
   }
 
   async getPagesRecomendations(pageExcludeSlug: string): Promise<LinkUrl[]> {
