@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { useSiteConfigStore } from "@/app/entities/gonzu/flux/siteConfig.store";
 import { RichText } from "@graphcms/rich-text-react-renderer";
 import type { RichTextProps } from "@graphcms/rich-text-types";
@@ -23,6 +23,12 @@ export const GraphCMSMarkdown = ({
     return () => {
       unsubscribe();
     };
+  }, []);
+
+  useEffect(() => {
+    useSiteConfigStore.getState().darkMode
+      ? ref.current?.classList.add("prose-dark")
+      : ref.current?.classList.remove("prose-dark");
   }, []);
 
   return (
