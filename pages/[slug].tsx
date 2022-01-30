@@ -8,11 +8,6 @@ import {
 import { usePageStore } from "@/app/entities/pages/flux/pages.store";
 import { Page } from "@/app/entities/pages/interfaces";
 import { PagesRecommendation } from "@/app/entities/pages/components/PagesRecommendation";
-import { SiteConfigModal } from "@/app/entities/gonzu/ui/SiteConfigModal";
-import {
-  CelebrationsProvider,
-  SongsProvider,
-} from "@/app/entities/gonzu/components/Providers";
 
 interface PagesProps {
   page: Page;
@@ -22,25 +17,26 @@ interface PagesProps {
 export default function Pages({ permaLink, page }: PagesProps) {
   usePageStore.setState({ loading: false, page, recomendations: [] }, true);
 
-  const { title } = usePageStore.getState().page!;
+  const { title } = page;
 
   return (
     <Layout seo={{ permaLink, title }}>
       <PageContent />
       <PagesRecommendation />
-      <SiteConfigModal />
-      <CelebrationsProvider />
-      <SongsProvider />
     </Layout>
   );
 }
 
 export const getStaticProps: GetStaticProps<PagesProps> = async (ctx) => {
-  const permaLink = ctx.params?.slug as string;
+  try {
+    const permaLink = ctx.params?.slug as string;
 
-  const page = await getPageBySlug(permaLink);
+    const page = await getPageBySlug(permaLink);
 
-  return { props: { permaLink, page: page! } };
+    return { props: { permaLink, page } };
+  } catch (error) {
+    return { notFound: true };
+  }
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {

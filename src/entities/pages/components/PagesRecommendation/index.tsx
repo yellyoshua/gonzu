@@ -18,7 +18,7 @@ export const PagesRecommendation = ({}: PagesRecommendationProps) => {
   const prevPage = (link: LinkUrl | null) =>
     link ? (
       <a
-        className="group flex items-center mr-3 text-gray-500 transition hover:text-gray-900 dark:hover:text-darkTextParagraph"
+        className="group flex items-center mr-3 text-gray-900 transition dark:text-white"
         href={link.url}
       >
         <ArrowLeftIcon className="w-4 mr-1" />
@@ -28,7 +28,7 @@ export const PagesRecommendation = ({}: PagesRecommendationProps) => {
 
   const nextPage = (link: LinkUrl) => (
     <a
-      className="group flex items-center ml-3 text-gray-500 transition hover:text-gray-900 dark:hover:text-darkTextParagraph"
+      className="group flex items-center ml-3 text-gray-900 transition dark:text-white"
       href={link.url}
     >
       {link.label}
@@ -41,9 +41,8 @@ export const PagesRecommendation = ({}: PagesRecommendationProps) => {
   }
 
   return (
-    <div className="mb-10  pt-6 mx-3 text-gray-700 font-semibold flex items-center">
+    <div className="mb-10  pt-6 mx-3 text-gray-700 font-semibold flex justify-evenly items-center">
       {prevPage(recomendations.length === 1 ? null : recomendations[0])}
-      <div className="flex-1" />
       {nextPage(recomendations[recomendations.length === 1 ? 0 : 1])}
     </div>
   );

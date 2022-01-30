@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Layout } from "@/app/ui/Layout";
+import Taken from "@/app/assets/Ilustrations/Taken";
 
 export default function NotFoundPageProps() {
   return (
@@ -7,6 +8,7 @@ export default function NotFoundPageProps() {
       <h1 className="text-center text-4xl my-10 font-jost dark:text-white">
         P&aacute;gina no encontrada
       </h1>
+      <Taken className="m-auto max-w-xs md:max-w-sm" />
       <div className="flex justify-center items-center my-10">
         <Link href="/">
           <a href="/">

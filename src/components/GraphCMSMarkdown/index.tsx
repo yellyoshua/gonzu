@@ -1,7 +1,7 @@
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { useSiteConfigStore } from "@/app/entities/gonzu/flux/siteConfig.store";
 import { RichText } from "@graphcms/rich-text-react-renderer";
-import { RichTextProps } from "@graphcms/rich-text-types";
-import { useEffect, useState } from "react";
+import type { RichTextProps } from "@graphcms/rich-text-types";
 
 interface GraphCMSMarkdownProps extends React.ComponentProps<"div"> {
   richTextProps: RichTextProps;
@@ -12,23 +12,30 @@ export const GraphCMSMarkdown = ({
   richTextProps,
   ...props
 }: GraphCMSMarkdownProps) => {
-  const [isDarkMode, setDarkMode] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const unsubscribe = useSiteConfigStore.subscribe((state) => {
+      state.darkMode
+        ? ref.current?.classList.add("prose-dark")
+        : ref.current?.classList.remove("prose-dark");
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
-    const unsubscribe = useSiteConfigStore.subscribe((state) =>
-      setDarkMode(state.darkMode)
-    );
-
-    return () => unsubscribe();
+    useSiteConfigStore.getState().darkMode
+      ? ref.current?.classList.add("prose-dark")
+      : ref.current?.classList.remove("prose-dark");
   }, []);
 
   return (
     <div
       {...props}
-      suppressHydrationWarning
-      className={`prose ${
-        isDarkMode && "prose-dark"
-      } font-jost dark:pb-5 ${className}`}
+      ref={ref}
+      className={`prose font-jost dark:pb-5 ${className}`}
     >
       <RichText
         {...richTextProps}
