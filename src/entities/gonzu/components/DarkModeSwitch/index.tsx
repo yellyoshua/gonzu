@@ -14,7 +14,7 @@ export const DarkModeSwitch = ({}: DarkModeSwitchProps) => {
       checked={isDarkMode}
       onChange={toggleDarkMode}
       className={`${
-        isDarkMode ? "bg-blue-700" : "bg-slate-500"
+        isDarkMode ? "bg-red-700" : "bg-black"
       } relative inline-flex items-center h-6 rounded-full w-11 transition-colors ease-in-out duration-200`}
     >
       <span className="sr-only">Enable notifications</span>
