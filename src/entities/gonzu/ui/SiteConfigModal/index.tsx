@@ -4,8 +4,22 @@ import { Modal } from "@/app/components/Modal";
 import BeakerIcon from "@heroicons/react/outline/BeakerIcon";
 import { DarkModeSwitch } from "@/app/entities/gonzu/components/DarkModeSwitch";
 import { CelebrationsRadioPicker } from "@/app/entities/gonzu/components/CelebrationsRadioPicker";
-import { SongsRadioPicker } from "@/app/entities/gonzu/components/SongsRadioPicker";
 import { useMedia } from "react-use";
+
+const ModalOptions = () => {
+  return (
+    <div className="w-full sm:mt-5">
+      <p className="my-2 font-jost font-bold text-sm text-black dark:text-white">
+        Celebraci&oacute;n de fondo:
+      </p>
+      <CelebrationsRadioPicker />
+      <p className="my-2 font-jost font-bold text-sm text-black dark:text-white">
+        Modo oscuro:
+      </p>
+      <DarkModeSwitch />
+    </div>
+  );
+};
 
 interface SiteConfigModalProps {}
 
@@ -17,29 +31,12 @@ export const SiteConfigModal = ({}: SiteConfigModalProps) => {
 
   const showModalHandler = () => setShowModal(true);
 
-  const renderContent = () => (
-    <div className="w-full sm:mt-5">
-      <p className="my-2 font-jost font-bold text-sm text-black dark:text-white">
-        Celebraci&oacute;n de fondo:
-      </p>
-      <CelebrationsRadioPicker />
-      <p className="my-2 font-jost font-bold text-sm text-black dark:text-white">
-        M&uacute;sica de fondo:
-      </p>
-      <SongsRadioPicker />
-      <p className="my-2 font-jost font-bold text-sm text-black dark:text-white">
-        Modo oscuro:
-      </p>
-      <DarkModeSwitch />
-    </div>
-  );
-
   return (
     <div>
       <Modal
         show={showModal}
         title="Configuración del sitio"
-        content={renderContent()}
+        content={<ModalOptions />}
         handlers={{
           onPressCancel: {
             handler: closeModalHandler,

@@ -21,22 +21,8 @@ export interface CelebrationOption {
   label: string;
 }
 
-export enum Songs {
-  NONE = "none",
-  CHRISTMAS = "christmas",
-  STUDYING = "studying",
-  SPIRITUAL = "spiritual",
-}
-
-export interface SongOption {
-  song: Songs;
-  label: string;
-}
-
 export interface SiteConfig {
   showInauguralConfetti: boolean;
-  song: Songs;
-  songsProviderImplemented: boolean;
   celebration: Celebrations;
   celebrationsProviderImplemented: boolean;
   darkMode: boolean;
