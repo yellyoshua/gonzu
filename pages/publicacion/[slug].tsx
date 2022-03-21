@@ -7,7 +7,6 @@ import {
   getPostsSlug,
 } from "@/app/entities/posts/flux/posts.actions";
 import { PostContent } from "@/app/entities/posts/ui/PostContent";
-import { Recommendations } from "@/app/components/Recommendations";
 
 interface PostsProps {
   post: Post;
@@ -17,12 +16,11 @@ interface PostsProps {
 export default function Posts({ permaLink, post }: PostsProps) {
   usePostStore.setState({ loading: false, post }, true);
 
-  const { title, slug } = post;
+  const { title } = post;
 
   return (
     <Layout seo={{ permaLink, title }}>
       <PostContent />
-      {/* <Recommendations entitie="posts" slugToExclude={slug} /> */}
     </Layout>
   );
 }
