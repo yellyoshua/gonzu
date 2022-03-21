@@ -1,20 +1,20 @@
 import { RawRichText } from "@/app/interfaces";
 import { GraphCMSMarkdown } from "@/app/components/GraphCMSMarkdown";
 import { PagesBackdrop } from "@/app/components/PagesBackdrop";
-import { usePageStore } from "@/app/entities/pages/flux/pages.store";
 import { PageCardDetails } from "@/app/components/PageCardDetails";
+import { usePostStore } from "../../flux/posts.store";
 
-interface PageContentProps {}
+interface PostContentProps {}
 
-export const PageContent = ({}: PageContentProps) => {
-  const page = usePageStore((state) => state.page);
-  const safeMarkdownContent = page?.content! as RawRichText;
-  const safeBackdrop = page ? page.backdrop : null;
+export const PostContent = ({}: PostContentProps) => {
+  const post = usePostStore((state) => state.post);
+  const safeMarkdownContent = post?.content! as RawRichText;
+  const safeBackdrop = post ? post.backdrop : null;
 
   return (
     <div>
       <PagesBackdrop backdrop={safeBackdrop} />
-      <PageCardDetails page={page!} />
+      <PageCardDetails page={post!} />
       <GraphCMSMarkdown
         className="max-w-screen-lg px-5 m-auto"
         richTextProps={{ content: safeMarkdownContent.raw }}

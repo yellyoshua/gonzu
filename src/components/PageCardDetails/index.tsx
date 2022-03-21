@@ -1,11 +1,14 @@
 import { TextWithIcon } from "@/app/components/commons/TextWithIcon";
-import { Page } from "@/app/entities/pages/interfaces";
 import CalendarIcon from "@heroicons/react/solid/CalendarIcon";
 import ClockIcon from "@heroicons/react/solid/ClockIcon";
 import dayjs from "dayjs";
 
 interface PageCardDetailsProps {
-  page: Page;
+  page: {
+    title: string;
+    updatedAt: string;
+    createdAt: string;
+  };
 }
 
 export const PageCardDetails = ({ page }: PageCardDetailsProps) => {

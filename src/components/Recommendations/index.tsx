@@ -1,19 +1,32 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { LinkUrl } from "@/app/interfaces";
 import ArrowLeftIcon from "@heroicons/react/outline/ArrowLeftIcon";
 import ArrowRightIcon from "@heroicons/react/outline/ArrowRightIcon";
-import { usePageStore } from "@/app/entities/pages/flux/pages.store";
-import { getPagesRecomendationsInStore } from "@/app/entities/pages/flux/pages.actions";
+import { getPagesRecomendations } from "@/app/entities/pages/flux/pages.actions";
+import { getPostsRecomendations } from "@/app/entities/posts/flux/posts.actions";
 
-interface PagesRecommendationProps {}
+interface RecommendationsProps {
+  entitie: "posts" | "pages";
+  slugToExclude?: string;
+}
 
-export const PagesRecommendation = ({}: PagesRecommendationProps) => {
-  const recomendations = usePageStore((state) => state.recomendations);
-  const slugOfPageToExclude = usePageStore((state) => state.page?.slug);
+export const Recommendations = ({
+  entitie,
+  slugToExclude,
+}: RecommendationsProps) => {
+  const [recomendations, setRecomendations] = useState<LinkUrl[]>([]);
 
   useEffect(() => {
-    getPagesRecomendationsInStore(slugOfPageToExclude);
-  }, [slugOfPageToExclude]);
+    if (entitie === "pages") {
+      getPagesRecomendations(slugToExclude)
+        .then(setRecomendations)
+        .catch(setRecomendations);
+    } else if (entitie === "posts") {
+      getPostsRecomendations(slugToExclude)
+        .then(setRecomendations)
+        .catch(setRecomendations);
+    }
+  }, [slugToExclude]);
 
   const prevPage = (link: LinkUrl | null) =>
     link ? (

@@ -20,10 +20,10 @@ const initialState: Gonzu = {
       { label: "Inicio", url: "/" },
       { label: "Servicios", url: "/servicios" },
       { label: "Contáctanos", url: "/contactanos" },
-      { label: "Noticias", url: "/tag/noticias" },
+      { label: "Noticias", url: "/app/noticias" },
       {
         label: "Oferta Académica",
-        url: "/offer-accademic",
+        url: "/ofertas-academicas",
         external: true,
       },
     ],
@@ -33,7 +33,7 @@ const initialState: Gonzu = {
       { label: "Dar un Tour", url: "/app/tour", disabled: true },
       { label: "Nosotros", url: "/nosotros" },
       { label: "Pastoral", url: "/pastoral" },
-      { label: "Inscripciones", url: "/app/inscripciones" },
+      { label: "Inscripciones", url: "/inscripciones" },
     ],
     academicOffers: [
       {
@@ -67,9 +67,8 @@ const initialState: Gonzu = {
         "Carlos Polit E18-300 Jardin del Valle Pasaje N. Parroquia Juan Pablo II",
     },
     links: [
-      { label: "Noticias", url: "/news" },
-      { label: "Eventos", url: "/events" },
-      { label: "Comunicados", url: "/comunicados" },
+      { label: "Noticias", url: "/app/noticias" },
+      { label: "Eventos", url: "/app/eventos" },
       { label: "Pastoral", url: "/pastoral" },
       {
         label: "Idukay",
