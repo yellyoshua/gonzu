@@ -1,8 +1,8 @@
 import { RawRichText } from "@/app/interfaces";
 import { GraphCMSMarkdown } from "@/app/components/GraphCMSMarkdown";
-import { PagesBackdrop } from "@/app/entities/pages/components/PagesBackdrop";
+import { PagesBackdrop } from "@/app/components/PagesBackdrop";
 import { usePageStore } from "@/app/entities/pages/flux/pages.store";
-import { PageCardDetails } from "@/app/entities/pages/components/PageCardDetails";
+import { PageCardDetails } from "@/app/components/PageCardDetails";
 
 interface PageContentProps {}
 

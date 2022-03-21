@@ -13,7 +13,7 @@ export const setPageInToStore = (page: Page) => {
   usePageStore.setState({ page, loading: false });
 };
 
-export const getPagesRecomendationsInStore = async (exeptPageSlug?: string) => {
+export const getPagesRecomendations = async (exeptPageSlug?: string) => {
   try {
     const pageExclude = exeptPageSlug ?? usePageStore.getState().page?.slug!;
 
@@ -21,8 +21,8 @@ export const getPagesRecomendationsInStore = async (exeptPageSlug?: string) => {
       pageExclude
     );
 
-    usePageStore.setState({ recomendations });
+    return recomendations;
   } catch (error) {
-    usePageStore.setState({ recomendations: [] });
+    return [];
   }
 };

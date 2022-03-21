@@ -7,6 +7,9 @@ interface GraphCMSMarkdownProps extends React.ComponentProps<"div"> {
   richTextProps: RichTextProps;
 }
 
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 export const GraphCMSMarkdown = ({
   className,
   richTextProps,
@@ -14,7 +17,7 @@ export const GraphCMSMarkdown = ({
 }: GraphCMSMarkdownProps) => {
   const ref = useRef<HTMLDivElement>(null);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const unsubscribe = useSiteConfigStore.subscribe((state) => {
       state.darkMode
         ? ref.current?.classList.add("prose-dark")
@@ -25,7 +28,7 @@ export const GraphCMSMarkdown = ({
     };
   }, []);
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     useSiteConfigStore.getState().darkMode
       ? ref.current?.classList.add("prose-dark")
       : ref.current?.classList.remove("prose-dark");

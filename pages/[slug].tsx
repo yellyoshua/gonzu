@@ -7,7 +7,7 @@ import {
 } from "@/app/entities/pages/flux/pages.actions";
 import { usePageStore } from "@/app/entities/pages/flux/pages.store";
 import { Page } from "@/app/entities/pages/interfaces";
-import { PagesRecommendation } from "@/app/entities/pages/components/PagesRecommendation";
+import { Recommendations } from "@/app/components/Recommendations";
 
 interface PagesProps {
   page: Page;
@@ -17,12 +17,12 @@ interface PagesProps {
 export default function Pages({ permaLink, page }: PagesProps) {
   usePageStore.setState({ loading: false, page, recomendations: [] }, true);
 
-  const { title } = page;
+  const { title, slug } = page;
 
   return (
     <Layout seo={{ permaLink, title }}>
       <PageContent />
-      <PagesRecommendation />
+      <Recommendations entitie="pages" slugToExclude={slug} />
     </Layout>
   );
 }
