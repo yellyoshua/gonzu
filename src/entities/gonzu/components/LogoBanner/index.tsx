@@ -30,11 +30,7 @@ export const LogoBanner = ({
                 ))}
 
             <img
-              src={
-                logosBannerMajor2
-                  ? logoBanner[logoBanner.length - 1]
-                  : logoBanner[0]
-              }
+              src="/assets/gonzu-header-banner.jpg"
               className={`${
                 className ? className : "h-20"
               } w-auto m-auto object-contain bg-white rounded my-2`}
